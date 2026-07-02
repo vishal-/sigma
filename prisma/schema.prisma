@@ -174,3 +174,11 @@ model Subscription {
 
   @@map("subscriptions")
 }
+
+model RequestLog {
+  id        String   @id @default(cuid())
+  method    String
+  timestamp DateTime @default(now())
+
+  @@map("request_logs")
+}
