@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
       logger.info({ externalAuthId: authUser.externalAuthId }, 'First login: Creating user, default tenant and Owner role')
 
       // Perform user and default workspace creation in a transaction
-      user = await prisma.$transaction(async (tx) => {
+      user = await prisma.$transaction(async (tx: any) => {
         const newUser = await tx.user.create({
           data: {
             externalAuthId: authUser.externalAuthId,
