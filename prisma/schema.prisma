@@ -1,184 +1,54 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
 }
 
+generator client {
+  provider = "prisma-client-js"
+}
+
 model User {
-  id             String   @id @default(cuid())
-  externalAuthId String   @unique
+  id            String    @id @default(uuid()) @db.Uuid
+  name          String?
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  sessions      Session[]
+  accounts      Account[]
 
-  email          String   @unique
-  name           String?
-  avatarUrl      String?
-  phone          String?
-
-  timezone       String?
-  language       String   @default("en")
-
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  lastLoginAt    DateTime?
-
-  memberships    TenantMember[]
-  preferences    UserPreference?
-
-  @@map("users")
+  @@map("user")
 }
 
-model UserPreference {
-  userId          String @id
-  currentTenantId String?
+model Session {
+  id        String   @id @default(uuid()) @db.Uuid
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  theme           String?
-  locale          String?
-
-  user            User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  currentTenant   Tenant? @relation(fields: [currentTenantId], references: [id])
-
-  @@map("user_preferences")
+  @@map("session")
 }
 
-model Tenant {
-  id          String   @id @default(cuid())
+model Account {
+  id                    String    @id @default(uuid()) @db.Uuid
+  userId                String    @db.Uuid
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  expiresAt             DateTime?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  name        String
-  slug        String   @unique
-  logoUrl     String?
-
-  createdById String
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  members         TenantMember[]
-  roles           Role[]
-  invitations     Invitation[]
-  subscription    Subscription?
-  userPreferences UserPreference[]
-
-  @@map("tenants")
-}
-
-model TenantMember {
-  id         String   @id @default(cuid())
-
-  tenantId   String
-  userId     String
-  roleId     String
-
-  joinedAt   DateTime @default(now())
-  isActive   Boolean  @default(true)
-
-  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role        Role @relation(fields: [roleId], references: [id])
-
-  @@unique([tenantId, userId])
-  @@index([tenantId])
-  @@index([userId])
-  @@index([roleId])
-
-  @@map("tenant_members")
-}
-
-model Role {
-  id          String @id @default(cuid())
-
-  tenantId    String
-
-  code        String
-  name        String
-  description String?
-
-  tenant       Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  members      TenantMember[]
-
-  permissions  RolePermission[]
-  invitations  Invitation[]
-
-  @@unique([tenantId, code])
-
-  @@map("roles")
-}
-
-model Permission {
-  id          String @id @default(cuid())
-
-  code        String @unique
-  name        String
-  description String?
-
-  roles       RolePermission[]
-
-  @@map("permissions")
-}
-
-model RolePermission {
-  roleId       String
-  permissionId String
-
-  role         Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
-
-  @@id([roleId, permissionId])
-
-  @@map("role_permissions")
-}
-
-model Invitation {
-  id          String @id @default(cuid())
-
-  tenantId    String
-
-  email       String
-
-  roleId      String
-
-  token       String @unique
-
-  expiresAt   DateTime
-
-  acceptedAt  DateTime?
-
-  createdById String
-
-  createdAt   DateTime @default(now())
-
-  tenant       Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  role         Role @relation(fields: [roleId], references: [id])
-
-  @@index([tenantId])
-
-  @@index([email])
-
-  @@map("invitations")
-}
-
-model Subscription {
-  id          String @id @default(cuid())
-
-  tenantId    String @unique
-
-  plan        String
-  status      String
-
-  startsAt    DateTime
-  endsAt      DateTime?
-
-  tenant       Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  @@map("subscriptions")
-}
-
-model RequestLog {
-  id        String   @id @default(cuid())
-  method    String
-  timestamp DateTime @default(now())
-
-  @@map("request_logs")
+  @@unique([providerId, accountId])
+  @@map("account")
 }
