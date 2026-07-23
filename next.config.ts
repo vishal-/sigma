@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
       // Facebook profile pictures
       { protocol: "https", hostname: "*.fbcdn.net" },
       { protocol: "https", hostname: "*.facebook.com" },
+      { protocol: "https", hostname: "*.fbsbx.com" },
       // Microsoft / Entra profile pictures
       { protocol: "https", hostname: "*.microsoft.com" },
       { protocol: "https", hostname: "*.microsoftonline.com" },
