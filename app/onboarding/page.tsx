@@ -17,6 +17,7 @@ import {
   HiCheck,
   HiExclamationCircle,
 } from "react-icons/hi2";
+import slugify from "@sindresorhus/slugify";
 
 interface CategoryChild {
   id: string;
@@ -78,13 +79,7 @@ export default function OnboardingPage() {
   // Auto-generate slug when name changes if user hasn't typed custom slug
   useEffect(() => {
     if (name && step === 1) {
-      const generated = name
-        .toLowerCase()
-        .trim()
-        .replace(/[\s_]+/g, "-")
-        .replace(/[^\w\-]+/g, "")
-        .replace(/\-\-+/g, "-");
-      setSlug(generated);
+      setSlug(slugify(name));
     }
   }, [name, step]);
 
