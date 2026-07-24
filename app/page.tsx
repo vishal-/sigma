@@ -1,7 +1,6 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import Link from "next/link";
-import Image from "next/image";
 import { FaArrowRight, FaGithub } from "react-icons/fa";
 
 export default async function Home() {

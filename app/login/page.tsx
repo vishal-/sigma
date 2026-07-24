@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { signIn } from "@/lib/auth-client";
-import { FaGoogle, FaFacebook, FaMicrosoft } from "react-icons/fa";
+import { FaGoogle, FaFacebook } from "react-icons/fa";
 
 export default function LoginPage() {
   const [loadingProvider, setLoadingProvider] = useState<string | null>(null);
@@ -16,8 +16,9 @@ export default function LoginPage() {
         provider,
         callbackURL: "/dashboard",
       });
-    } catch (err: any) {
-      setError(err?.message || "An unexpected error occurred. Please try again.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "An unexpected error occurred. Please try again.";
+      setError(message);
       setLoadingProvider(null);
     }
   };

@@ -1,7 +1,6 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import Image from "next/image";
 import SignOutButton from "./SignOutButton";
 import { FaUser, FaEnvelope, FaShieldAlt, FaCalendarAlt } from "react-icons/fa";
 
@@ -59,11 +58,12 @@ export default async function DashboardPage() {
           <div className="md:col-span-1 flex flex-col items-center p-6 rounded-2xl border border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl h-fit">
             <div className="relative w-24 h-24 mb-4 group">
               {user.image ? (
-                <Image
+                <img
                   src={user.image}
                   alt={user.name || "User avatar"}
-                  fill
-                  className="rounded-full object-cover border-2 border-zinc-800 group-hover:border-zinc-700 transition-colors"
+                  className="absolute inset-0 w-full h-full rounded-full object-cover border-2 border-zinc-800 group-hover:border-zinc-700 transition-colors"
+                  loading="lazy"
+                  referrerPolicy="no-referrer"
                 />
               ) : (
                 <div className="w-full h-full rounded-full bg-gradient-to-tr from-zinc-800 to-zinc-700 flex items-center justify-center border-2 border-zinc-800 text-2xl font-bold text-zinc-300">
