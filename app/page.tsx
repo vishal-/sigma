@@ -532,7 +532,7 @@ export default function LandingPage() {
                   href="#list-classes"
                   className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm sm:text-base px-7 py-3.5 rounded-xl shadow-md shadow-indigo-600/30 hover:shadow-indigo-600/40 transition-all flex items-center gap-2 active:scale-95"
                 >
-                  <span>List Your Classes – It's Free</span>
+                  <span>List Your Classes – It&apos;s Free</span>
                   <HiArrowRight className="w-5 h-5" />
                 </Link>
               </div>
@@ -650,7 +650,7 @@ export default function LandingPage() {
                 </span>
               </Link>
               <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-6 max-w-sm">
-                India's trusted platform to discover tutors, coaching institutes and mentors for academics, sports, arts and more.
+                India&apos;s trusted platform to discover tutors, coaching institutes and mentors for academics, sports, arts and more.
               </p>
               {/* Social Icons */}
               <div className="flex items-center gap-3">
