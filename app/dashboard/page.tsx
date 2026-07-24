@@ -1,206 +1,131 @@
+import React from "react";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-import SignOutButton from "./SignOutButton";
-import { FaUser, FaEnvelope, FaShieldAlt, FaCalendarAlt } from "react-icons/fa";
+import { prisma } from "@/lib/prisma";
+import Link from "next/link";
+import {
+  HiCheckCircle,
+  HiShare,
+  HiPencilSquare,
+  HiPhoto,
+  HiMapPin,
+  HiArrowTopRightOnSquare,
+  HiSparkles,
+  HiEye,
+  HiBuildingOffice2,
+} from "react-icons/hi2";
+import ShareWidget from "@/components/ShareWidget";
 
-export default async function DashboardPage() {
-  // Fetch session server-side
+export default async function DashboardOverview() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
-  // Redirect to login if not authenticated
-  if (!session) {
-    redirect("/login");
-  }
+  if (!session?.user) return null;
 
-  const { user } = session;
+  const membership = await prisma.membership.findFirst({
+    where: { userId: session.user.id },
+    include: {
+      organization: {
+        include: {
+          locations: true,
+          media: true,
+          categories: {
+            include: { category: true },
+          },
+        },
+      },
+    },
+  });
 
-  // Get user initials for avatar fallback
-  const getInitials = (name?: string | null) => {
-    if (!name) return "?";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .slice(0, 2)
-      .join("")
-      .toUpperCase();
-  };
+  if (!membership || !membership.organization) return null;
+
+  const org = membership.organization;
+  const location = org.locations[0];
+  const galleryCount = org.media.filter((m) => m.type === "GALLERY").length;
+
+  const publicUrl = `http://localhost:3000/${org.slug}`;
 
   return (
-    <div className="relative min-h-screen bg-zinc-950 text-zinc-50 font-sans overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,rgba(120,119,198,0.12),rgba(255,255,255,0))]" />
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
+    <div className="max-w-4xl mx-auto space-y-8 animate-fadeIn">
+      {/* Welcome Banner */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-900/40 via-purple-900/30 to-slate-900 border border-indigo-500/20 p-6 md:p-8 backdrop-blur-xl">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-      {/* Main Container */}
-      <div className="max-w-4xl mx-auto px-6 py-12 relative z-10">
-        {/* Header bar */}
-        <header className="flex items-center justify-between pb-8 mb-12 border-b border-zinc-800/80">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-tr from-purple-500 to-blue-500 flex items-center justify-center shadow-lg shadow-purple-500/10">
-              <span className="text-lg font-bold">Σ</span>
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-3">
+              <HiCheckCircle className="w-4 h-4" />
+              Public Page Live & Shareable
             </div>
-            <div>
-              <span className="font-bold text-lg text-white">Sigma</span>
-              <span className="text-zinc-500 text-xs ml-1.5 uppercase tracking-wider font-semibold">Console</span>
-            </div>
-          </div>
-          <SignOutButton />
-        </header>
-
-        {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          
-          {/* Left Column - User Profile Card */}
-          <div className="md:col-span-1 flex flex-col items-center p-6 rounded-2xl border border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl h-fit">
-            <div className="relative w-24 h-24 mb-4 group">
-              {user.image ? (
-                <img
-                  src={user.image}
-                  alt={user.name || "User avatar"}
-                  className="absolute inset-0 w-full h-full rounded-full object-cover border-2 border-zinc-800 group-hover:border-zinc-700 transition-colors"
-                  loading="lazy"
-                  referrerPolicy="no-referrer"
-                />
-              ) : (
-                <div className="w-full h-full rounded-full bg-gradient-to-tr from-zinc-800 to-zinc-700 flex items-center justify-center border-2 border-zinc-800 text-2xl font-bold text-zinc-300">
-                  {getInitials(user.name)}
-                </div>
-              )}
-              <span className="absolute bottom-0 right-0 w-4.5 h-4.5 bg-green-500 border-2 border-zinc-900 rounded-full" />
-            </div>
-
-            <h2 className="text-xl font-bold text-white text-center truncate max-w-full">
-              {user.name || "Anonymous User"}
-            </h2>
-            <p className="text-zinc-500 text-xs mt-1 truncate max-w-full">
-              {user.email}
+            <h1 className="text-3xl font-extrabold text-white tracking-tight">
+              Welcome back, {session.user.name || "Tutor"}!
+            </h1>
+            <p className="text-slate-300 text-sm mt-1">
+              Your professional page for <span className="font-bold text-white">{org.name}</span> is live. Anyone can view your profile at:
             </p>
-
-            <div className="mt-6 w-full pt-6 border-t border-zinc-800/80 flex flex-col gap-3.5 text-xs">
-              <div className="flex items-center justify-between text-zinc-400">
-                <span>Account Status</span>
-                <span className="text-green-400 font-semibold px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/20">
-                  Active
-                </span>
-              </div>
-              <div className="flex items-center justify-between text-zinc-400">
-                <span>Auth Provider</span>
-                <span className="text-zinc-200 capitalize font-medium">
-                  {session.session.id ? "OAuth" : "Unknown"}
-                </span>
-              </div>
+            <div className="mt-3 flex items-center gap-2">
+              <span className="font-mono text-indigo-300 bg-indigo-950/80 px-3 py-1.5 rounded-xl border border-indigo-800/80 text-sm font-semibold">
+                tutorog.com/{org.slug}
+              </span>
+              <a
+                href={`/${org.slug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white transition shadow-lg shadow-indigo-600/30"
+                title="View live page"
+              >
+                <HiArrowTopRightOnSquare className="w-4 h-4" />
+              </a>
             </div>
           </div>
 
-          {/* Right Column - Account Info Details */}
-          <div className="md:col-span-2 space-y-6">
-            
-            {/* Profile Info Details Card */}
-            <div className="p-8 rounded-2xl border border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl">
-              <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                <FaUser className="text-purple-500 text-sm" />
-                Profile Information
-              </h3>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-zinc-500 text-xs font-semibold uppercase tracking-wider mb-1.5">
-                    User Identifier (UUID)
-                  </label>
-                  <div className="font-mono text-zinc-300 text-xs bg-zinc-950 p-2.5 rounded-lg border border-zinc-850 select-all overflow-x-auto whitespace-nowrap">
-                    {user.id}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-zinc-500 text-xs font-semibold uppercase tracking-wider mb-1.5">
-                    Email Address
-                  </label>
-                  <div className="flex items-center gap-2 text-zinc-200 text-sm bg-zinc-950 p-2.5 rounded-lg border border-zinc-850">
-                    <FaEnvelope className="text-zinc-600 text-xs" />
-                    <span className="truncate">{user.email}</span>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-zinc-500 text-xs font-semibold uppercase tracking-wider mb-1.5">
-                    Display Name
-                  </label>
-                  <div className="flex items-center gap-2 text-zinc-200 text-sm bg-zinc-950 p-2.5 rounded-lg border border-zinc-850">
-                    <FaUser className="text-zinc-600 text-xs" />
-                    <span>{user.name || "Not set"}</span>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-zinc-500 text-xs font-semibold uppercase tracking-wider mb-1.5">
-                    Email Verification Status
-                  </label>
-                  <div className="flex items-center gap-2 text-zinc-200 text-sm bg-zinc-950 p-2.5 rounded-lg border border-zinc-850">
-                    <FaShieldAlt className={user.emailVerified ? "text-green-500 text-xs" : "text-amber-500 text-xs"} />
-                    <span>{user.emailVerified ? "Verified (Linked OAuth Account)" : "Unverified"}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Session Info Card */}
-            <div className="p-8 rounded-2xl border border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl">
-              <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                <FaCalendarAlt className="text-blue-500 text-sm" />
-                Active Session
-              </h3>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
-                <div>
-                  <span className="block text-zinc-550 text-xs font-semibold uppercase tracking-wider mb-1">
-                    Session ID
-                  </span>
-                  <div className="font-mono text-zinc-400 text-xs truncate">
-                    {session.session.id}
-                  </div>
-                </div>
-
-                <div>
-                  <span className="block text-zinc-555 text-xs font-semibold uppercase tracking-wider mb-1">
-                    Expires At
-                  </span>
-                  <div className="text-zinc-350 flex items-center gap-2 text-xs">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                    {new Date(session.session.expiresAt).toLocaleString()}
-                  </div>
-                </div>
-
-                {session.session.ipAddress && (
-                  <div>
-                    <span className="block text-zinc-500 text-xs font-semibold uppercase tracking-wider mb-1">
-                      IP Address
-                    </span>
-                    <div className="text-zinc-300 font-mono text-xs">
-                      {session.session.ipAddress}
-                    </div>
-                  </div>
-                )}
-
-                {session.session.userAgent && (
-                  <div className="sm:col-span-2">
-                    <span className="block text-zinc-500 text-xs font-semibold uppercase tracking-wider mb-1">
-                      Device / User Agent
-                    </span>
-                    <div className="text-zinc-400 text-xs truncate bg-zinc-950 p-2.5 rounded-lg border border-zinc-850 font-mono">
-                      {session.session.userAgent}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
+          <div className="shrink-0 flex flex-col gap-3">
+            <Link
+              href="/dashboard/profile"
+              className="px-5 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm flex items-center gap-2 transition shadow-lg shadow-indigo-600/30"
+            >
+              <HiPencilSquare className="w-5 h-5" />
+              Edit Profile
+            </Link>
           </div>
+        </div>
+      </div>
 
+      {/* Share Widget Component */}
+      <ShareWidget orgName={org.name} slug={org.slug} />
+
+      {/* Overview Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 backdrop-blur-xl">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">Categories</span>
+            <HiBuildingOffice2 className="w-6 h-6 text-indigo-400" />
+          </div>
+          <p className="text-2xl font-extrabold text-white">{org.categories.length}</p>
+          <p className="text-xs text-slate-400 mt-1">
+            {org.categories.map((c) => c.category.name).join(", ") || "No categories selected"}
+          </p>
+        </div>
+
+        <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 backdrop-blur-xl">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">Gallery Photos</span>
+            <HiPhoto className="w-6 h-6 text-emerald-400" />
+          </div>
+          <p className="text-2xl font-extrabold text-white">{galleryCount}</p>
+          <Link href="/dashboard/gallery" className="text-xs text-emerald-400 hover:underline mt-1 inline-block font-semibold">
+            Manage gallery &rarr;
+          </Link>
+        </div>
+
+        <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 backdrop-blur-xl">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-xs font-bold uppercase tracking-wider text-purple-400">Primary Location</span>
+            <HiMapPin className="w-6 h-6 text-purple-400" />
+          </div>
+          <p className="text-lg font-bold text-white truncate">{location?.city || "Not set"}</p>
+          <p className="text-xs text-slate-400 truncate mt-1">{location?.addressLine1 || "No address added"}</p>
         </div>
       </div>
     </div>

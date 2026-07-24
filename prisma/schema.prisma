@@ -6,19 +6,79 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// ==================== ENUMS ====================
+
+enum MembershipRole {
+  OWNER
+  ADMIN
+  TRAINER
+  STAFF
+}
+
+enum OrganizationType {
+  INDIVIDUAL
+  ACADEMY
+  COACHING
+  SCHOOL
+  COLLEGE
+  UNIVERSITY
+  SPORTS
+  MUSIC
+  DANCE
+  ARTS
+  OTHER
+}
+
+enum OrganizationStatus {
+  DRAFT
+  PUBLISHED
+  SUSPENDED
+}
+
+enum MediaType {
+  LOGO
+  COVER
+  GALLERY
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  CLOSED
+}
+
+// ==================== AUTH & USER ====================
+
 model User {
-  id            String    @id @db.Uuid
+  id            String       @id @db.Uuid
   name          String?
-  email         String    @unique
-  emailVerified Boolean   @default(false)
+  email         String       @unique
+  emailVerified Boolean      @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 
   sessions      Session[]
   accounts      Account[]
+  profile       UserProfile?
+  memberships   Membership[]
+  reviews       Review[]
 
   @@map("user")
+}
+
+model UserProfile {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @unique @db.Uuid
+  bio       String?
+  phone     String?
+  timezone  String?  @default("UTC")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profile")
 }
 
 model Session {
@@ -64,4 +124,150 @@ model Verification {
   updatedAt  DateTime @updatedAt
 
   @@map("verification")
+}
+
+// ==================== CORE DOMAIN ====================
+
+model Organization {
+  id          String             @id @default(uuid()) @db.Uuid
+  slug        String             @unique
+  name        String
+  tagline     String?
+  description String?
+  type        OrganizationType   @default(INDIVIDUAL)
+  status      OrganizationStatus @default(DRAFT)
+  phone       String?
+  email       String?
+  website     String?
+  whatsapp    String?
+  verified    Boolean            @default(false)
+  avgRating   Float              @default(0)
+  reviewCount Int                @default(0)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  memberships Membership[]
+  categories  OrganizationCategory[]
+  locations   OrganizationLocation[]
+  media       OrganizationMedia[]
+  courses     Course[]
+  reviews     Review[]
+  leads       Lead[]
+
+  @@map("organization")
+}
+
+model Membership {
+  id             String         @id @default(uuid()) @db.Uuid
+  userId         String         @db.Uuid
+  organizationId String         @db.Uuid
+  role           MembershipRole @default(OWNER)
+  createdAt      DateTime       @default(now())
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId])
+  @@map("membership")
+}
+
+model Category {
+  id       String  @id @default(uuid()) @db.Uuid
+  name     String
+  slug     String  @unique
+  icon     String?
+  parentId String? @db.Uuid
+
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children Category[] @relation("CategoryTree")
+
+  organizations OrganizationCategory[]
+
+  @@map("category")
+}
+
+model OrganizationCategory {
+  organizationId String @db.Uuid
+  categoryId     String @db.Uuid
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  category     Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([organizationId, categoryId])
+  @@map("organization_category")
+}
+
+model OrganizationLocation {
+  id             String   @id @default(uuid()) @db.Uuid
+  organizationId String   @db.Uuid
+  title          String?
+  addressLine1   String
+  addressLine2   String?
+  city           String
+  state          String
+  country        String   @default("India")
+  postalCode     String?
+  latitude       Decimal? @db.Decimal(9, 6)
+  longitude      Decimal? @db.Decimal(9, 6)
+  googlePlaceId  String?
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("organization_location")
+}
+
+model OrganizationMedia {
+  id             String    @id @default(uuid()) @db.Uuid
+  organizationId String    @db.Uuid
+  type           MediaType
+  url            String
+  altText        String?
+  sortOrder      Int       @default(0)
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("organization_media")
+}
+
+model Course {
+  id             String   @id @default(uuid()) @db.Uuid
+  organizationId String   @db.Uuid
+  title          String
+  description    String?
+  duration       String?
+  price          Decimal? @db.Decimal(10, 2)
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("course")
+}
+
+model Review {
+  id             String   @id @default(uuid()) @db.Uuid
+  organizationId String   @db.Uuid
+  userId         String   @db.Uuid
+  rating         Int
+  comment        String?
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@map("review")
+}
+
+model Lead {
+  id             String     @id @default(uuid()) @db.Uuid
+  organizationId String     @db.Uuid
+  name           String
+  phone          String
+  email          String?
+  message        String?
+  status         LeadStatus @default(NEW)
+  createdAt      DateTime   @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("lead")
 }
