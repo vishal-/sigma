@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { signIn } from "@/lib/auth-client";
-import { FaGoogle, FaFacebook, FaMicrosoft } from "react-icons/fa";
+import { FaGoogle, FaFacebook } from "react-icons/fa";
 
 export default function LoginPage() {
   const [loadingProvider, setLoadingProvider] = useState<string | null>(null);
@@ -16,8 +16,9 @@ export default function LoginPage() {
         provider,
         callbackURL: "/dashboard",
       });
-    } catch (err: any) {
-      setError(err?.message || "An unexpected error occurred. Please try again.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "An unexpected error occurred. Please try again.";
+      setError(message);
       setLoadingProvider(null);
     }
   };
@@ -88,7 +89,7 @@ export default function LoginPage() {
           </button>
 
           {/* Microsoft */}
-          <button
+          {/* <button
             onClick={() => handleOAuthLogin("microsoft")}
             disabled={loadingProvider !== null}
             className="w-full flex items-center justify-center gap-3 px-5 py-3.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:bg-zinc-800 hover:border-zinc-700 text-zinc-100 font-semibold text-sm transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed group active:scale-[0.98]"
@@ -102,7 +103,7 @@ export default function LoginPage() {
               <FaMicrosoft className="text-blue-400 text-lg transition-transform duration-200 group-hover:scale-110" />
             )}
             <span>Continue with Microsoft</span>
-          </button>
+          </button> */}
         </div>
 
         {/* Footer info */}
