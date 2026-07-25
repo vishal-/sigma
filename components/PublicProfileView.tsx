@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import AcademicProfileView from "@/components/AcademicProfileView";
 
 interface MediaItem {
   id: string;
@@ -61,6 +62,20 @@ interface PublicProfileProps {
 }
 
 export default function PublicProfileView({ organization: org }: PublicProfileProps) {
+  const primaryCategory = org.categories[0]?.category.name || "";
+  const isAcademic =
+    org.type === "ACADEMY" ||
+    org.type === "COACHING" ||
+    org.type === "INDIVIDUAL" ||
+    primaryCategory.toLowerCase().includes("academic") ||
+    primaryCategory.toLowerCase().includes("tuition") ||
+    primaryCategory.toLowerCase().includes("math") ||
+    primaryCategory.toLowerCase().includes("science");
+
+  if (isAcademic) {
+    return <AcademicProfileView organization={org as any} />;
+  }
+
   const [activeImage, setActiveImage] = useState<string | null>(null);
   const [showInquiryModal, setShowInquiryModal] = useState(false);
   const [copied, setCopied] = useState(false);
