@@ -20,6 +20,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import AcademicProfileView from "@/components/profile/AcademicProfileView";
+import DanceProfileView from "@/components/profile/DanceProfileView";
 import { OrganizationProps } from "@/types/organization";
 
 interface PublicProfileProps {
@@ -39,6 +40,17 @@ export default function PublicProfileView({ organization: org }: PublicProfilePr
   const [leadSuccess, setLeadSuccess] = useState(false);
 
   const primaryCategory = org.category?.name || org.categories?.[0]?.category.name || "";
+
+  const isDance =
+    org.type === "DANCE" ||
+    primaryCategory.toLowerCase().includes("dance") ||
+    org.name.toLowerCase().includes("dance") ||
+    org.name.toLowerCase().includes("studio");
+
+  if (isDance) {
+    return <DanceProfileView organization={org} />;
+  }
+
   const isAcademic =
     org.type === "ACADEMY" ||
     org.type === "COACHING" ||
