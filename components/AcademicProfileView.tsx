@@ -33,44 +33,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-
-interface OrganizationProps {
-  id: string;
-  name: string;
-  slug: string;
-  tagline?: string | null;
-  description?: string | null;
-  type: string;
-  phone?: string | null;
-  whatsapp?: string | null;
-  email?: string | null;
-  locations: Array<{
-    id: string;
-    title?: string | null;
-    addressLine1: string;
-    city: string;
-    state?: string | null;
-    country?: string | null;
-  }>;
-  media: Array<{
-    id: string;
-    type: string;
-    url: string;
-  }>;
-  category?: {
-    id: string;
-    name: string;
-    slug: string;
-    children?: Array<{ name: string }>;
-  } | null;
-  categories?: Array<{
-    category: {
-      id: string;
-      name: string;
-      slug: string;
-    };
-  }>;
-}
+import { OrganizationProps } from "@/types/organization";
 
 export default function AcademicProfileView({
   organization,

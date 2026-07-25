@@ -20,46 +20,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import AcademicProfileView from "@/components/AcademicProfileView";
-
-interface MediaItem {
-  id: string;
-  type: string;
-  url: string;
-  altText?: string | null;
-}
-
-interface LocationItem {
-  addressLine1: string;
-  addressLine2?: string | null;
-  city: string;
-  state: string;
-}
-
-interface CategoryItem {
-  category: {
-    id: string;
-    name: string;
-  };
-}
+import { OrganizationProps } from "@/types/organization";
 
 interface PublicProfileProps {
-  organization: {
-    id: string;
-    name: string;
-    tagline?: string | null;
-    description?: string | null;
-    phone?: string | null;
-    whatsapp?: string | null;
-    email?: string | null;
-    website?: string | null;
-    slug: string;
-    verified: boolean;
-    type: string;
-    media: MediaItem[];
-    locations: LocationItem[];
-    category?: { id: string; name: string } | null;
-    categories?: CategoryItem[];
-  };
+  organization: OrganizationProps;
 }
 
 export default function PublicProfileView({ organization: org }: PublicProfileProps) {
