@@ -29,7 +29,6 @@ export default function OnboardingPage() {
   const [categories, setCategories] = useState<ParentCategory[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
   const [selectedSubjectIds, setSelectedSubjectIds] = useState<string[]>([]);
-  const [customSubject, setCustomSubject] = useState<string>("");
 
   const [addressLine1, setAddressLine1] = useState("");
   const [city, setCity] = useState("");
@@ -153,16 +152,9 @@ export default function OnboardingPage() {
         ? [selectedCategoryId, ...selectedSubjectIds]
         : selectedSubjectIds;
 
-      let finalTagline = tagline;
-      if (customSubject.trim()) {
-        finalTagline = finalTagline
-          ? `${finalTagline} • ${customSubject.trim()}`
-          : customSubject.trim();
-      }
-
       const payload = {
         name,
-        tagline: finalTagline,
+        tagline,
         type,
         slug,
         phone,
@@ -258,8 +250,6 @@ export default function OnboardingPage() {
               setSelectedCategoryId={handleCategoryChange}
               selectedSubjectIds={selectedSubjectIds}
               toggleSubject={toggleSubject}
-              customSubject={customSubject}
-              setCustomSubject={setCustomSubject}
               onNext={() => setStep(3)}
               onBack={() => setStep(1)}
             />

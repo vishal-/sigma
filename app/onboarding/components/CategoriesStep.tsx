@@ -1,7 +1,6 @@
 import React from "react";
 import { HiTag, HiCheck, HiArrowLeft, HiArrowRight, HiSparkles } from "react-icons/hi2";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -31,8 +30,6 @@ interface CategoriesStepProps {
   setSelectedCategoryId: (id: string) => void;
   selectedSubjectIds: string[];
   toggleSubject: (id: string) => void;
-  customSubject: string;
-  setCustomSubject: (val: string) => void;
   onNext: () => void;
   onBack: () => void;
 }
@@ -43,8 +40,6 @@ export function CategoriesStep({
   setSelectedCategoryId,
   selectedSubjectIds,
   toggleSubject,
-  customSubject,
-  setCustomSubject,
   onNext,
   onBack,
 }: CategoriesStepProps) {
@@ -116,23 +111,6 @@ export function CategoriesStep({
           </div>
         </div>
       )}
-
-      {/* 3. Custom / Other Subject Input Box */}
-      <div className="space-y-2 pt-1">
-        <Label htmlFor="custom-subject" className="text-slate-300">
-          Other / Custom Subjects <span className="text-slate-500 font-normal">(Optional)</span>
-        </Label>
-        <Input
-          id="custom-subject"
-          type="text"
-          placeholder="e.g. Vedic Maths, Robotics AI, Kathak Dance..."
-          value={customSubject}
-          onChange={(e) => setCustomSubject(e.target.value)}
-        />
-        <p className="text-[11px] text-slate-500">
-          Specify any additional subjects or specializations not listed in the pills above.
-        </p>
-      </div>
 
       {/* Navigation Buttons */}
       <div className="pt-4 flex items-center justify-between">
