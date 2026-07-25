@@ -168,6 +168,7 @@ export default function OnboardingPage() {
         slug,
         phone,
         whatsapp,
+        categoryId: selectedCategoryId,
         categoryIds: allCategoryIds,
         addressLine1,
         city,

@@ -146,8 +146,10 @@ model Organization {
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
 
+  categoryId  String?            @db.Uuid
+
+  category    Category?          @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   memberships Membership[]
-  categories  OrganizationCategory[]
   locations   OrganizationLocation[]
   media       OrganizationMedia[]
   courses     Course[]
@@ -181,20 +183,9 @@ model Category {
   parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
   children Category[] @relation("CategoryTree")
 
-  organizations OrganizationCategory[]
+  organizations Organization[]
 
   @@map("category")
-}
-
-model OrganizationCategory {
-  organizationId String @db.Uuid
-  categoryId     String @db.Uuid
-
-  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  category     Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-
-  @@id([organizationId, categoryId])
-  @@map("organization_category")
 }
 
 model OrganizationLocation {

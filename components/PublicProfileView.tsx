@@ -57,12 +57,13 @@ interface PublicProfileProps {
     type: string;
     media: MediaItem[];
     locations: LocationItem[];
-    categories: CategoryItem[];
+    category?: { id: string; name: string } | null;
+    categories?: CategoryItem[];
   };
 }
 
 export default function PublicProfileView({ organization: org }: PublicProfileProps) {
-  const primaryCategory = org.categories[0]?.category.name || "";
+  const primaryCategory = org.category?.name || org.categories?.[0]?.category.name || "";
   const isAcademic =
     org.type === "ACADEMY" ||
     org.type === "COACHING" ||
@@ -192,7 +193,15 @@ export default function PublicProfileView({ organization: org }: PublicProfilePr
                     </span>
                   )}
 
-                  {org.categories.map((c) => (
+                  {org.category && (
+                    <span
+                      key={org.category.id}
+                      className="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold"
+                    >
+                      {org.category.name}
+                    </span>
+                  )}
+                  {org.categories?.map((c) => (
                     <span
                       key={c.category.id}
                       className="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold"

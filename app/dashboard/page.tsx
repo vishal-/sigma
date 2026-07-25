@@ -30,9 +30,7 @@ export default async function DashboardOverview() {
         include: {
           locations: true,
           media: true,
-          categories: {
-            include: { category: true },
-          },
+          category: true,
         },
       },
     },
@@ -99,12 +97,12 @@ export default async function DashboardOverview() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 backdrop-blur-xl">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">Categories</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">Primary Category</span>
             <HiBuildingOffice2 className="w-6 h-6 text-indigo-400" />
           </div>
-          <p className="text-2xl font-extrabold text-white">{org.categories.length}</p>
+          <p className="text-xl font-extrabold text-white truncate">{org.category?.name || "None"}</p>
           <p className="text-xs text-slate-400 mt-1">
-            {org.categories.map((c) => c.category.name).join(", ") || "No categories selected"}
+            {org.category?.name ? "Primary classification set" : "No category selected"}
           </p>
         </div>
 

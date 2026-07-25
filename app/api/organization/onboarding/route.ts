@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
       tagline,
       type,
       slug,
+      categoryId,
       categoryIds,
       addressLine1,
       city,
@@ -29,6 +30,8 @@ export async function POST(req: NextRequest) {
       logoUrl,
       coverUrl,
     } = body;
+
+    const targetCategoryId = categoryId || (Array.isArray(categoryIds) && categoryIds[0]) || null;
 
     if (!name || !slug || !city || !addressLine1) {
       return NextResponse.json(
@@ -64,6 +67,7 @@ export async function POST(req: NextRequest) {
           phone,
           whatsapp,
           email: session.user.email,
+          categoryId: targetCategoryId,
         },
       });
 
@@ -87,16 +91,6 @@ export async function POST(req: NextRequest) {
           country: "India",
         },
       });
-
-      // 4. Attach Categories
-      if (Array.isArray(categoryIds) && categoryIds.length > 0) {
-        await tx.organizationCategory.createMany({
-          data: categoryIds.map((catId: string) => ({
-            organizationId: org.id,
-            categoryId: catId,
-          })),
-        });
-      }
 
       // 5. Media attachments
       if (logoUrl) {

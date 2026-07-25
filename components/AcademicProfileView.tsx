@@ -57,7 +57,13 @@ interface OrganizationProps {
     type: string;
     url: string;
   }>;
-  categories: Array<{
+  category?: {
+    id: string;
+    name: string;
+    slug: string;
+    children?: Array<{ name: string }>;
+  } | null;
+  categories?: Array<{
     category: {
       id: string;
       name: string;
@@ -118,7 +124,13 @@ export default function AcademicProfileView({
     }
   };
 
-  const subjectsList = organization.categories.map((c) => c.category.name);
+  const subjectsList = organization.category?.children
+    ? organization.category.children.map((c) => c.name)
+    : organization.category
+    ? [organization.category.name]
+    : organization.categories
+    ? organization.categories.map((c) => c.category.name)
+    : [];
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-blue-600 selection:text-white">

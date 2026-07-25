@@ -19,8 +19,8 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
     include: {
       locations: true,
       media: true,
-      categories: {
-        include: { category: true },
+      category: {
+        include: { children: true },
       },
     },
   });
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
     };
   }
 
-  const primaryCategory = org.categories[0]?.category.name || "Coaching & Tutoring";
+  const primaryCategory = org.category?.name || "Coaching & Tutoring";
   const city = org.locations[0]?.city || "India";
   const coverImage = org.media.find((m) => m.type === "COVER" || m.type === "LOGO")?.url;
 
@@ -66,8 +66,8 @@ export default async function SlugPublicPage({ params }: SlugPageProps) {
     include: {
       locations: true,
       media: true,
-      categories: {
-        include: { category: true },
+      category: {
+        include: { children: true },
       },
     },
   });
