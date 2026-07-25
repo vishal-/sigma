@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import {
   HiAcademicCap,
   HiPhone,
@@ -18,12 +17,9 @@ import {
   HiPencilSquare,
   HiPlay,
   HiChatBubbleLeftRight,
-  HiArrowTopRightOnSquare,
-  HiStar,
   HiCheckBadge,
 } from "react-icons/hi2";
 import {
-  FaWhatsapp,
   FaFacebookF,
   FaInstagram,
   FaYoutube,
@@ -323,7 +319,7 @@ export default function AcademicProfileView({
               </div>
               <div>
                 <h4 className="font-extrabold text-sm text-slate-900">Continuous Support</h4>
-                <p className="text-xs text-slate-500 mt-0.5">We're here to guide you every step of the way.</p>
+                <p className="text-xs text-slate-500 mt-0.5">We&apos;re here to guide you every step of the way.</p>
               </div>
             </div>
           </div>
@@ -538,7 +534,7 @@ export default function AcademicProfileView({
               “
             </div>
             <p className="text-slate-800 text-lg sm:text-xl font-bold leading-relaxed">
-              "{organization.name} helped me build confidence and achieve my competitive dream. The teachers truly care and clarify every doubt!"
+              &quot;{organization.name} helped me build confidence and achieve my competitive dream. The teachers truly care and clarify every doubt!&quot;
             </p>
             <div>
               <div className="font-black text-slate-900 text-base">– Ananya S.</div>

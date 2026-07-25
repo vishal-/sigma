@@ -27,6 +27,17 @@ interface PublicProfileProps {
 }
 
 export default function PublicProfileView({ organization: org }: PublicProfileProps) {
+  const [activeImage, setActiveImage] = useState<string | null>(null);
+  const [showInquiryModal, setShowInquiryModal] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  // Inquiry Form state
+  const [inquiryName, setInquiryName] = useState("");
+  const [inquiryPhone, setInquiryPhone] = useState("");
+  const [inquiryMessage, setInquiryMessage] = useState("");
+  const [submittingLead, setSubmittingLead] = useState(false);
+  const [leadSuccess, setLeadSuccess] = useState(false);
+
   const primaryCategory = org.category?.name || org.categories?.[0]?.category.name || "";
   const isAcademic =
     org.type === "ACADEMY" ||
@@ -38,19 +49,8 @@ export default function PublicProfileView({ organization: org }: PublicProfilePr
     primaryCategory.toLowerCase().includes("science");
 
   if (isAcademic) {
-    return <AcademicProfileView organization={org as any} />;
+    return <AcademicProfileView organization={org} />;
   }
-
-  const [activeImage, setActiveImage] = useState<string | null>(null);
-  const [showInquiryModal, setShowInquiryModal] = useState(false);
-  const [copied, setCopied] = useState(false);
-
-  // Inquiry Form state
-  const [inquiryName, setInquiryName] = useState("");
-  const [inquiryPhone, setInquiryPhone] = useState("");
-  const [inquiryMessage, setInquiryMessage] = useState("");
-  const [submittingLead, setSubmittingLead] = useState(false);
-  const [leadSuccess, setLeadSuccess] = useState(false);
 
   const logoMedia = org.images.find((m) => m.type === "LOGO");
   const coverMedia = org.images.find((m) => m.type === "COVER");

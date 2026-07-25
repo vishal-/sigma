@@ -75,7 +75,7 @@ export default async function DashboardLayout({
             Welcome to Tutorog
           </h1>
           <p className="text-slate-400 text-base sm:text-lg max-w-xl mx-auto mb-12">
-            You don't have a Tuition Center or Academy profile associated with your account yet. What would you like to do?
+            You don&apos;t have a Tuition Center or Academy profile associated with your account yet. What would you like to do?
           </p>
 
           <div className="grid md:grid-cols-2 gap-6 text-left">

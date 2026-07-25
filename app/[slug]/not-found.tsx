@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { HiBuildingOffice2, HiMagnifyingGlass, HiArrowLeft } from "react-icons/hi2";
+import { HiBuildingOffice2, HiArrowLeft } from "react-icons/hi2";
 
 export default function NotFoundSlug() {
   return (

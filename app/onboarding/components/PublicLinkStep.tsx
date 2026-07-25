@@ -99,7 +99,7 @@ export function PublicLinkStep({
                 onClick={() => setSlug(suggestedSlug)}
                 className="ml-2 underline text-indigo-400 font-bold hover:text-indigo-300 cursor-pointer"
               >
-                Use "{suggestedSlug}"?
+                Use &quot;{suggestedSlug}&quot;?
               </button>
             )}
           </div>

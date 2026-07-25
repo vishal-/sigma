@@ -37,11 +37,9 @@ export default function OnboardingPage() {
 
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
-  const [logoUrl, setLogoUrl] = useState<string>("");
 
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
-  const [coverUrl, setCoverUrl] = useState<string>("");
 
   const [slug, setSlug] = useState("");
   const [slugStatus, setSlugStatus] = useState<"idle" | "checking" | "available" | "taken" | "invalid">("idle");
@@ -61,15 +59,16 @@ export default function OnboardingPage() {
   // Auto-generate slug when name changes if user hasn't typed custom slug
   useEffect(() => {
     if (name && step === 1) {
-      setSlug(slugify(name));
+      const timer = setTimeout(() => setSlug(slugify(name)), 0);
+      return () => clearTimeout(timer);
     }
   }, [name, step]);
 
   // Real-time slug validation
   useEffect(() => {
     if (!slug) {
-      setSlugStatus("idle");
-      return;
+      const timer = setTimeout(() => setSlugStatus("idle"), 0);
+      return () => clearTimeout(timer);
     }
 
     const timer = setTimeout(() => {
@@ -140,8 +139,8 @@ export default function OnboardingPage() {
     setLoading(true);
 
     try {
-      let finalLogoUrl = logoUrl;
-      let finalCoverUrl = coverUrl;
+      let finalLogoUrl = "";
+      let finalCoverUrl = "";
 
       if (logoFile) {
         finalLogoUrl = await uploadImage(logoFile, "LOGO");

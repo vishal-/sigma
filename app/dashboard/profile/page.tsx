@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { ImageItem } from "@/types/organization";
 import { Button } from "@/components/ui/button";
 
 export default function ProfileEditPage() {
@@ -61,14 +62,14 @@ export default function ProfileEditPage() {
             setState(loc.state || "");
           }
 
-          const logo = org.images?.find((m: any) => m.type === "LOGO");
+          const logo = org.images?.find((m: ImageItem) => m.type === "LOGO");
           if (logo) setLogoPreview(logo.originalUrl);
 
-          const cover = org.images?.find((m: any) => m.type === "COVER");
+          const cover = org.images?.find((m: ImageItem) => m.type === "COVER");
           if (cover) setCoverPreview(cover.originalUrl);
         }
       })
-      .catch((err) => setError("Failed to load profile data"))
+      .catch(() => setError("Failed to load profile data"))
       .finally(() => setLoading(false));
   }, []);
 
@@ -126,8 +127,8 @@ export default function ProfileEditPage() {
 
       setSuccess(true);
       setTimeout(() => setSuccess(false), 4000);
-    } catch (err: any) {
-      setError(err.message || "An unexpected error occurred");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "An unexpected error occurred");
     } finally {
       setSaving(false);
     }

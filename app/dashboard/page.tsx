@@ -5,13 +5,10 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import {
   HiCheckCircle,
-  HiShare,
   HiPencilSquare,
   HiPhoto,
   HiMapPin,
   HiArrowTopRightOnSquare,
-  HiSparkles,
-  HiEye,
   HiBuildingOffice2,
 } from "react-icons/hi2";
 import ShareWidget from "@/components/ShareWidget";
@@ -41,8 +38,6 @@ export default async function DashboardOverview() {
   const org = membership.organization;
   const location = org.locations[0];
   const galleryCount = org.images.filter((m) => m.type === "GALLERY").length;
-
-  const publicUrl = `http://localhost:3000/${org.slug}`;
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-fadeIn">

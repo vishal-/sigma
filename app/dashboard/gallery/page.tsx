@@ -1,16 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { HiPhoto, HiCloudArrowUp, HiTrash, HiSparkles } from "react-icons/hi2";
-
-interface GalleryMedia {
-  id: string;
-  url: string;
-  altText?: string;
-}
+import { HiPhoto, HiCloudArrowUp, HiTrash } from "react-icons/hi2";
+import { ImageItem } from "@/types/organization";
 
 export default function GalleryPage() {
-  const [gallery, setGallery] = useState<GalleryMedia[]>([]);
+  const [gallery, setGallery] = useState<ImageItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +16,7 @@ export default function GalleryPage() {
       .then((data) => {
         if (data.organization?.images) {
           const galleryItems = data.organization.images.filter(
-            (m: any) => m.type === "GALLERY"
+            (m: ImageItem) => m.type === "GALLERY"
           );
           setGallery(galleryItems);
         }
@@ -66,8 +61,8 @@ export default function GalleryPage() {
       }
 
       fetchGallery();
-    } catch (err: any) {
-      setError(err.message || "Failed to upload images");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to upload images");
     } finally {
       setUploading(false);
     }
