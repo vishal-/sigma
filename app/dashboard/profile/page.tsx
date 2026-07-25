@@ -10,6 +10,10 @@ import {
   HiExclamationCircle,
   HiArrowTopRightOnSquare,
 } from "react-icons/hi2";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 export default function ProfileEditPage() {
   const [loading, setLoading] = useState(true);
@@ -182,35 +186,35 @@ export default function ProfileEditPage() {
             Academy Details
           </h2>
 
-          <div>
-            <label className="block text-sm font-semibold text-slate-200 mb-2">Academy Name</label>
-            <input
+          <div className="space-y-2">
+            <Label htmlFor="academy-name">Academy Name</Label>
+            <Input
+              id="academy-name"
               type="text"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-3 rounded-2xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-indigo-500 transition"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-semibold text-slate-200 mb-2">Short Tagline</label>
-            <input
+          <div className="space-y-2">
+            <Label htmlFor="tagline">Short Tagline</Label>
+            <Input
+              id="tagline"
               type="text"
               value={tagline}
               onChange={(e) => setTagline(e.target.value)}
-              className="w-full px-4 py-3 rounded-2xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-indigo-500 transition"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-semibold text-slate-200 mb-2">About & Description</label>
-            <textarea
+          <div className="space-y-2">
+            <Label htmlFor="description">About & Description</Label>
+            <Textarea
+              id="description"
               rows={4}
               placeholder="Describe your teaching experience, courses offered, accomplishments, and batch timings..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-4 py-3 rounded-2xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-indigo-500 transition"
             />
           </div>
         </div>
@@ -220,34 +224,34 @@ export default function ProfileEditPage() {
           <h2 className="text-xl font-bold text-white">Contact Information</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-semibold text-slate-200 mb-2">Phone Number</label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-4 py-3 rounded-2xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-indigo-500 transition"
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-slate-200 mb-2">WhatsApp Number</label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="whatsapp">WhatsApp Number</Label>
+              <Input
+                id="whatsapp"
                 type="tel"
                 value={whatsapp}
                 onChange={(e) => setWhatsapp(e.target.value)}
-                className="w-full px-4 py-3 rounded-2xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-indigo-500 transition"
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-slate-200 mb-2">Website URL</label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="website">Website URL</Label>
+              <Input
+                id="website"
                 type="url"
                 placeholder="https://example.com"
                 value={website}
                 onChange={(e) => setWebsite(e.target.value)}
-                className="w-full px-4 py-3 rounded-2xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-indigo-500 transition"
               />
             </div>
           </div>
@@ -260,34 +264,34 @@ export default function ProfileEditPage() {
             Address & Location
           </h2>
 
-          <div>
-            <label className="block text-sm font-semibold text-slate-200 mb-2">Street Address</label>
-            <input
+          <div className="space-y-2">
+            <Label htmlFor="address">Street Address</Label>
+            <Input
+              id="address"
               type="text"
               value={addressLine1}
               onChange={(e) => setAddressLine1(e.target.value)}
-              className="w-full px-4 py-3 rounded-2xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-indigo-500 transition"
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-semibold text-slate-200 mb-2">City</label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="city">City</Label>
+              <Input
+                id="city"
                 type="text"
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
-                className="w-full px-4 py-3 rounded-2xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-indigo-500 transition"
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-slate-200 mb-2">State</label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="state">State</Label>
+              <Input
+                id="state"
                 type="text"
                 value={state}
                 onChange={(e) => setState(e.target.value)}
-                className="w-full px-4 py-3 rounded-2xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-indigo-500 transition"
               />
             </div>
           </div>
@@ -301,8 +305,8 @@ export default function ProfileEditPage() {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-semibold text-slate-200 mb-2">Academy Logo</label>
+            <div className="space-y-2">
+              <Label>Academy Logo</Label>
               <div className="flex items-center gap-4">
                 <div className="w-20 h-20 rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden shrink-0 flex items-center justify-center">
                   {logoPreview ? (
@@ -312,7 +316,8 @@ export default function ProfileEditPage() {
                   )}
                 </div>
                 <label className="cursor-pointer px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition flex items-center gap-2">
-                  <HiCloudArrowUp className="w-4 h-4" /> Change Logo
+                  <HiCloudArrowUp className="w-4 h-4 text-indigo-400" />
+                  <span>Change Logo</span>
                   <input
                     type="file"
                     accept="image/*"
@@ -329,8 +334,8 @@ export default function ProfileEditPage() {
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-slate-200 mb-2">Cover Banner</label>
+            <div className="space-y-2">
+              <Label>Cover Banner</Label>
               <div className="relative w-full h-24 rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden flex items-center justify-center">
                 {coverPreview ? (
                   <img src={coverPreview} alt="Cover" className="w-full h-full object-cover" />
@@ -338,7 +343,8 @@ export default function ProfileEditPage() {
                   <span className="text-xs text-slate-500">No cover banner set</span>
                 )}
                 <label className="absolute bottom-2 right-2 cursor-pointer px-3 py-1.5 rounded-xl bg-slate-900/90 text-slate-200 text-xs font-semibold border border-slate-700 backdrop-blur-md transition flex items-center gap-1.5">
-                  <HiCloudArrowUp className="w-4 h-4 text-indigo-400" /> Upload
+                  <HiCloudArrowUp className="w-4 h-4 text-indigo-400" />
+                  <span>Upload</span>
                   <input
                     type="file"
                     accept="image/*"
@@ -359,13 +365,13 @@ export default function ProfileEditPage() {
 
         {/* Submit */}
         <div className="flex justify-end">
-          <button
+          <Button
             type="submit"
             disabled={saving}
-            className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-extrabold flex items-center gap-2 shadow-xl shadow-indigo-600/30 disabled:opacity-50 transition"
+            className="px-8 h-12 text-base font-extrabold shadow-xl shadow-indigo-600/30"
           >
             {saving ? "Saving Changes..." : "Save Profile Changes"}
-          </button>
+          </Button>
         </div>
       </form>
     </div>

@@ -1,15 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import { HiClipboardDocumentCheck, HiClipboard, HiShare, HiQrCode } from "react-icons/hi2";
+import { HiClipboardDocumentCheck, HiClipboard, HiShare } from "react-icons/hi2";
 import { FaWhatsapp } from "react-icons/fa6";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface ShareWidgetProps {
   orgName: string;
   slug: string;
 }
 
-export default function ShareWidget({ orgName, slug }: ShareWidgetProps) {
+export default function ShareWidget({ slug }: ShareWidgetProps) {
   const [copied, setCopied] = useState(false);
   const publicUrl = typeof window !== "undefined" 
     ? `${window.location.origin}/${slug}`
@@ -42,39 +44,40 @@ export default function ShareWidget({ orgName, slug }: ShareWidgetProps) {
 
       <div className="flex flex-col sm:flex-row items-center gap-3">
         <div className="w-full flex-1 relative flex items-center">
-          <input
+          <Input
             type="text"
             readOnly
             value={publicUrl}
-            className="w-full px-4 py-3 rounded-2xl bg-slate-950 border border-slate-800 text-indigo-300 font-mono text-sm focus:outline-none select-all"
+            className="pr-28 font-mono text-indigo-300 select-all"
           />
-          <button
+          <Button
             type="button"
+            size="sm"
             onClick={copyLink}
-            className="absolute right-2 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-1.5 transition"
+            className="absolute right-1.5 h-8 gap-1.5 text-xs"
           >
             {copied ? (
               <>
                 <HiClipboardDocumentCheck className="w-4 h-4 text-emerald-300" />
-                Copied!
+                <span>Copied!</span>
               </>
             ) : (
               <>
                 <HiClipboard className="w-4 h-4" />
-                Copy Link
+                <span>Copy Link</span>
               </>
             )}
-          </button>
+          </Button>
         </div>
 
-        <button
+        <Button
           type="button"
           onClick={shareWhatsApp}
-          className="w-full sm:w-auto px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center gap-2 transition shrink-0 shadow-lg shadow-emerald-600/20"
+          className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs gap-2 shrink-0 shadow-lg shadow-emerald-600/20"
         >
           <FaWhatsapp className="w-4 h-4" />
-          Share on WhatsApp
-        </button>
+          <span>Share on WhatsApp</span>
+        </Button>
       </div>
     </div>
   );

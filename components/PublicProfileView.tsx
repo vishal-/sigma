@@ -15,6 +15,10 @@ import {
   HiCheck,
 } from "react-icons/hi2";
 import { FaWhatsapp } from "react-icons/fa6";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 interface MediaItem {
   id: string;
@@ -360,48 +364,48 @@ export default function PublicProfileView({ organization: org }: PublicProfilePr
               </div>
             ) : (
               <form onSubmit={handleLeadSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Your Name</label>
-                  <input
+                <div className="space-y-1.5 text-left">
+                  <Label htmlFor="inquiry-name">Your Name</Label>
+                  <Input
+                    id="inquiry-name"
                     type="text"
                     required
                     placeholder="Enter your name"
                     value={inquiryName}
                     onChange={(e) => setInquiryName(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-indigo-500"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Phone Number</label>
-                  <input
+                <div className="space-y-1.5 text-left">
+                  <Label htmlFor="inquiry-phone">Phone Number</Label>
+                  <Input
+                    id="inquiry-phone"
                     type="tel"
                     required
                     placeholder="Enter phone number"
                     value={inquiryPhone}
                     onChange={(e) => setInquiryPhone(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-indigo-500"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Message / Requirements</label>
-                  <textarea
+                <div className="space-y-1.5 text-left">
+                  <Label htmlFor="inquiry-message">Message / Requirements</Label>
+                  <Textarea
+                    id="inquiry-message"
                     rows={3}
                     placeholder="Which class or subject are you interested in?"
                     value={inquiryMessage}
                     onChange={(e) => setInquiryMessage(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-indigo-500"
                   />
                 </div>
 
-                <button
+                <Button
                   type="submit"
                   disabled={submittingLead}
-                  className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/30 transition disabled:opacity-50"
+                  className="w-full h-11 font-bold shadow-lg shadow-indigo-600/30"
                 >
                   {submittingLead ? "Submitting..." : "Send Inquiry"}
-                </button>
+                </Button>
               </form>
             )}
           </div>

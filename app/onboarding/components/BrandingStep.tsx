@@ -1,5 +1,7 @@
 import React from "react";
 import { HiPhoto, HiCloudArrowUp, HiArrowLeft, HiArrowRight } from "react-icons/hi2";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 interface BrandingStepProps {
   logoPreview: string | null;
@@ -31,10 +33,8 @@ export function BrandingStep({
       </div>
 
       {/* Logo Upload */}
-      <div>
-        <label className="block text-sm font-semibold text-slate-200 mb-2">
-          Logo / Profile Picture
-        </label>
+      <div className="space-y-2">
+        <Label>Logo / Profile Picture</Label>
         <div className="flex items-center gap-4">
           <div className="w-20 h-20 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-center overflow-hidden shrink-0">
             {logoPreview ? (
@@ -44,18 +44,16 @@ export function BrandingStep({
             )}
           </div>
           <label className="cursor-pointer px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition flex items-center gap-2">
-            <HiCloudArrowUp className="w-4 h-4" />
-            Choose Logo File
+            <HiCloudArrowUp className="w-4 h-4 text-indigo-400" />
+            <span>Choose Logo File</span>
             <input type="file" accept="image/*" className="hidden" onChange={handleLogoChange} />
           </label>
         </div>
       </div>
 
       {/* Cover Upload */}
-      <div>
-        <label className="block text-sm font-semibold text-slate-200 mb-2">
-          Cover / Banner Image
-        </label>
+      <div className="space-y-2">
+        <Label>Cover / Banner Image</Label>
         <div className="relative w-full h-32 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-center overflow-hidden">
           {coverPreview ? (
             <img src={coverPreview} alt="Cover preview" className="w-full h-full object-cover" />
@@ -67,29 +65,30 @@ export function BrandingStep({
           )}
           <label className="absolute bottom-3 right-3 cursor-pointer px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-900 text-slate-200 text-xs font-semibold border border-slate-700 backdrop-blur-md transition flex items-center gap-1.5">
             <HiCloudArrowUp className="w-4 h-4 text-indigo-400" />
-            Upload Banner
+            <span>Upload Banner</span>
             <input type="file" accept="image/*" className="hidden" onChange={handleCoverChange} />
           </label>
         </div>
       </div>
 
       <div className="pt-4 flex items-center justify-between">
-        <button
+        <Button
           type="button"
+          variant="outline"
           onClick={onBack}
-          className="px-5 py-2.5 rounded-2xl border border-slate-800 text-slate-300 hover:bg-slate-800 font-semibold flex items-center gap-2 transition"
+          className="gap-2"
         >
           <HiArrowLeft className="w-5 h-5" />
-          Back
-        </button>
-        <button
+          <span>Back</span>
+        </Button>
+        <Button
           type="button"
           onClick={onNext}
-          className="px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold flex items-center gap-2 shadow-lg shadow-indigo-600/30 transition"
+          className="gap-2"
         >
-          Continue to Handle
+          <span>Continue to Handle</span>
           <HiArrowRight className="w-5 h-5" />
-        </button>
+        </Button>
       </div>
     </div>
   );

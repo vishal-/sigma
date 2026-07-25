@@ -7,6 +7,9 @@ import {
   HiSparkles,
   HiArrowLeft,
 } from "react-icons/hi2";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 interface PublicLinkStepProps {
   name: string;
@@ -45,31 +48,32 @@ export function PublicLinkStep({
         </p>
       </div>
 
-      <div>
-        <label className="block text-sm font-semibold text-slate-200 mb-2">
+      <div className="space-y-2">
+        <Label htmlFor="slug-input">
           Public Profile Handle <span className="text-rose-400">*</span>
-        </label>
+        </Label>
         <div className="relative flex items-center">
-          <span className="absolute left-4 text-slate-500 text-sm font-semibold select-none">
+          <span className="absolute left-4 text-slate-500 text-sm font-semibold select-none z-10">
             tutorog.com/
           </span>
-          <input
+          <Input
+            id="slug-input"
             type="text"
             required
             placeholder="bharatdance"
             value={slug}
             onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"))}
-            className={`w-full pl-28 pr-12 py-3.5 rounded-2xl bg-slate-950 border text-white font-semibold placeholder-slate-600 focus:outline-none transition ${
+            className={`pl-28 pr-12 h-12 font-semibold ${
               slugStatus === "available"
-                ? "border-emerald-500/80 focus:ring-2 focus:ring-emerald-500/20"
+                ? "border-emerald-500/80 focus-visible:ring-emerald-500/20"
                 : slugStatus === "taken" || slugStatus === "invalid"
-                ? "border-rose-500/80 focus:ring-2 focus:ring-rose-500/20"
-                : "border-slate-800 focus:border-indigo-500"
+                ? "border-rose-500/80 focus-visible:ring-rose-500/20"
+                : ""
             }`}
           />
-          <div className="absolute right-4">
+          <div className="absolute right-4 z-10">
             {slugStatus === "checking" && (
-              <div className="w-5 h-5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
             )}
             {slugStatus === "available" && (
               <HiCheckCircle className="w-6 h-6 text-emerald-400" />
@@ -93,7 +97,7 @@ export function PublicLinkStep({
               <button
                 type="button"
                 onClick={() => setSlug(suggestedSlug)}
-                className="ml-2 underline text-indigo-400 font-bold hover:text-indigo-300"
+                className="ml-2 underline text-indigo-400 font-bold hover:text-indigo-300 cursor-pointer"
               >
                 Use "{suggestedSlug}"?
               </button>
@@ -122,31 +126,32 @@ export function PublicLinkStep({
       </div>
 
       <div className="pt-4 flex items-center justify-between">
-        <button
+        <Button
           type="button"
+          variant="outline"
           onClick={onBack}
-          className="px-5 py-2.5 rounded-2xl border border-slate-800 text-slate-300 hover:bg-slate-800 font-semibold flex items-center gap-2 transition"
+          className="gap-2"
         >
           <HiArrowLeft className="w-5 h-5" />
-          Back
-        </button>
-        <button
+          <span>Back</span>
+        </Button>
+        <Button
           type="submit"
           disabled={loading || slugStatus !== "available"}
-          className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-extrabold flex items-center gap-2 shadow-xl shadow-indigo-600/30 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          className="gap-2 font-extrabold px-8 h-12 shadow-xl shadow-indigo-600/30"
         >
           {loading ? (
             <>
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              Creating Profile...
+              <span>Creating Profile...</span>
             </>
           ) : (
             <>
-              Publish Profile
+              <span>Publish Profile</span>
               <HiSparkles className="w-5 h-5" />
             </>
           )}
-        </button>
+        </Button>
       </div>
     </form>
   );

@@ -1,5 +1,6 @@
 import React from "react";
 import { HiTag, HiCheck, HiArrowLeft, HiArrowRight } from "react-icons/hi2";
+import { Button } from "@/components/ui/button";
 
 export interface CategoryChild {
   id: string;
@@ -57,9 +58,9 @@ export function CategoriesStep({
                     key={child.id}
                     type="button"
                     onClick={() => toggleCategory(child.id)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition border flex items-center gap-1.5 ${
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition border flex items-center gap-1.5 cursor-pointer ${
                       isSelected
-                        ? "bg-indigo-600 text-white border-indigo-500 shadow-md shadow-indigo-500/20"
+                        ? "bg-primary text-primary-foreground border-primary shadow-md shadow-indigo-500/20"
                         : "bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white"
                     }`}
                   >
@@ -74,22 +75,23 @@ export function CategoriesStep({
       </div>
 
       <div className="pt-4 flex items-center justify-between">
-        <button
+        <Button
           type="button"
+          variant="outline"
           onClick={onBack}
-          className="px-5 py-2.5 rounded-2xl border border-slate-800 text-slate-300 hover:bg-slate-800 font-semibold flex items-center gap-2 transition"
+          className="gap-2"
         >
           <HiArrowLeft className="w-5 h-5" />
-          Back
-        </button>
-        <button
+          <span>Back</span>
+        </Button>
+        <Button
           type="button"
           onClick={onNext}
-          className="px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold flex items-center gap-2 shadow-lg shadow-indigo-600/30 transition"
+          className="gap-2"
         >
-          Continue to Location
+          <span>Continue to Location</span>
           <HiArrowRight className="w-5 h-5" />
-        </button>
+        </Button>
       </div>
     </div>
   );

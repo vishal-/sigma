@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Header from "@/components/common/Header";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   HiAcademicCap,
   HiMagnifyingGlass,
@@ -640,20 +642,21 @@ export default function LandingPage() {
                 Subscribe to get tips, updates and learning resources.
               </p>
               <form onSubmit={handleSubscribe} className="flex flex-col gap-2">
-                <input
+                <Input
                   type="email"
                   required
                   placeholder="Enter your email"
                   value={newsletterEmail}
                   onChange={(e) => setNewsletterEmail(e.target.value)}
-                  className="bg-slate-900 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                  className="h-10 text-xs"
                 />
-                <button
+                <Button
                   type="submit"
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs py-2.5 rounded-xl shadow-sm transition-all cursor-pointer"
+                  size="sm"
+                  className="h-9 text-xs font-semibold"
                 >
                   {subscribed ? "Subscribed!" : "Subscribe"}
-                </button>
+                </Button>
               </form>
             </div>
 
