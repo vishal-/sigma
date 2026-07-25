@@ -8,12 +8,17 @@ export interface OrganizationLocationItem {
   country?: string | null;
 }
 
-export interface OrganizationMediaItem {
+export interface ImageItem {
   id: string;
+  organizationId?: string | null;
+  userId?: string | null;
   type: string;
-  url: string;
+  originalUrl: string;
+  mediumUrl: string;
+  thumbnailUrl: string;
   altText?: string | null;
   sortOrder?: number;
+  createdAt?: Date | string;
 }
 
 export interface OrganizationCategoryItem {
@@ -47,7 +52,7 @@ export interface OrganizationProps {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   locations: OrganizationLocationItem[];
-  media: OrganizationMediaItem[];
+  images: ImageItem[];
   category?: OrganizationCategoryItem | null;
   categories?: Array<{
     category: {

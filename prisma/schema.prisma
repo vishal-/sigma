@@ -35,10 +35,11 @@ enum OrganizationStatus {
   SUSPENDED
 }
 
-enum MediaType {
+enum ImageType {
   LOGO
   COVER
   GALLERY
+  PROFILE
 }
 
 enum LeadStatus {
@@ -63,6 +64,7 @@ model User {
   profile       UserProfile?
   memberships   Membership[]
   reviews       Review[]
+  images        Image[]
 
   @@map("user")
 }
@@ -151,7 +153,7 @@ model Organization {
   category    Category?          @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   memberships Membership[]
   locations   OrganizationLocation[]
-  media       OrganizationMedia[]
+  images      Image[]
   courses     Course[]
   reviews     Review[]
   leads       Lead[]
@@ -207,17 +209,22 @@ model OrganizationLocation {
   @@map("organization_location")
 }
 
-model OrganizationMedia {
+model Image {
   id             String    @id @default(uuid()) @db.Uuid
-  organizationId String    @db.Uuid
-  type           MediaType
-  url            String
+  organizationId String?   @db.Uuid
+  userId         String?   @db.Uuid
+  type           ImageType
+  originalUrl    String
+  mediumUrl      String
+  thumbnailUrl   String
   altText        String?
   sortOrder      Int       @default(0)
+  createdAt      DateTime  @default(now())
 
-  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("organization_media")
+  @@map("image")
 }
 
 model Course {
