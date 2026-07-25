@@ -1,6 +1,15 @@
 import React from "react";
-import { HiTag, HiCheck, HiArrowLeft, HiArrowRight } from "react-icons/hi2";
+import { HiTag, HiCheck, HiArrowLeft, HiArrowRight, HiSparkles } from "react-icons/hi2";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export interface CategoryChild {
   id: string;
@@ -18,62 +27,114 @@ export interface ParentCategory {
 
 interface CategoriesStepProps {
   categories: ParentCategory[];
-  selectedCategoryIds: string[];
-  toggleCategory: (id: string) => void;
+  selectedCategoryId: string;
+  setSelectedCategoryId: (id: string) => void;
+  selectedSubjectIds: string[];
+  toggleSubject: (id: string) => void;
+  customSubject: string;
+  setCustomSubject: (val: string) => void;
   onNext: () => void;
   onBack: () => void;
 }
 
 export function CategoriesStep({
   categories,
-  selectedCategoryIds,
-  toggleCategory,
+  selectedCategoryId,
+  setSelectedCategoryId,
+  selectedSubjectIds,
+  toggleSubject,
+  customSubject,
+  setCustomSubject,
   onNext,
   onBack,
 }: CategoriesStepProps) {
+  const activeCategory = categories.find((c) => c.id === selectedCategoryId);
+
   return (
     <div className="space-y-6 animate-fadeIn">
       <div>
         <h2 className="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2">
           <HiTag className="w-7 h-7 text-indigo-400" />
-          Select your Categories & Subjects
+          Primary Category & Subjects
         </h2>
         <p className="text-slate-400 text-sm mt-1">
-          Choose one or more categories that describe your teaching services.
+          Select your main category and choose the subjects or classes you offer.
         </p>
       </div>
 
-      <div className="space-y-4 max-h-[380px] overflow-y-auto pr-2 custom-scrollbar">
-        {categories.map((parent) => (
-          <div key={parent.id} className="bg-slate-950/60 rounded-2xl p-4 border border-slate-800/80">
-            <div className="font-bold text-indigo-300 text-sm mb-3 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
-              {parent.name}
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {parent.children.map((child) => {
-                const isSelected = selectedCategoryIds.includes(child.id);
-                return (
-                  <button
-                    key={child.id}
-                    type="button"
-                    onClick={() => toggleCategory(child.id)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition border flex items-center gap-1.5 cursor-pointer ${
-                      isSelected
-                        ? "bg-primary text-primary-foreground border-primary shadow-md shadow-indigo-500/20"
-                        : "bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white"
-                    }`}
-                  >
-                    {isSelected && <HiCheck className="w-3.5 h-3.5" />}
-                    {child.name}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        ))}
+      {/* 1. Category Dropdown */}
+      <div className="space-y-2">
+        <Label>
+          Primary Category <span className="text-rose-400">*</span>
+        </Label>
+        <Select value={selectedCategoryId} onValueChange={setSelectedCategoryId}>
+          <SelectTrigger className="h-12 bg-slate-950">
+            <SelectValue placeholder="Select a primary category (e.g. Academics, Sports)..." />
+          </SelectTrigger>
+          <SelectContent>
+            {categories.map((parent) => (
+              <SelectItem key={parent.id} value={parent.id}>
+                {parent.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
+      {/* 2. Subject Pills for Selected Category */}
+      {activeCategory && activeCategory.children.length > 0 && (
+        <div className="space-y-3 bg-slate-950/60 p-5 rounded-2xl border border-slate-800 animate-fadeIn">
+          <div className="flex items-center justify-between">
+            <Label className="text-xs uppercase tracking-wider text-indigo-300 font-bold flex items-center gap-1.5">
+              <HiSparkles className="w-4 h-4 text-indigo-400" />
+              Subjects in {activeCategory.name}
+            </Label>
+            <span className="text-[11px] text-slate-500 font-medium">
+              Select all that apply
+            </span>
+          </div>
+
+          <div className="flex flex-wrap gap-2.5 pt-1 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
+            {activeCategory.children.map((child) => {
+              const isSelected = selectedSubjectIds.includes(child.id);
+              return (
+                <button
+                  key={child.id}
+                  type="button"
+                  onClick={() => toggleSubject(child.id)}
+                  className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 border flex items-center gap-1.5 cursor-pointer ${
+                    isSelected
+                      ? "bg-primary text-primary-foreground border-primary shadow-md shadow-indigo-600/30 scale-105"
+                      : "bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white"
+                  }`}
+                >
+                  {isSelected && <HiCheck className="w-3.5 h-3.5 stroke-[3]" />}
+                  {child.name}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* 3. Custom / Other Subject Input Box */}
+      <div className="space-y-2 pt-1">
+        <Label htmlFor="custom-subject" className="text-slate-300">
+          Other / Custom Subjects <span className="text-slate-500 font-normal">(Optional)</span>
+        </Label>
+        <Input
+          id="custom-subject"
+          type="text"
+          placeholder="e.g. Vedic Maths, Robotics AI, Kathak Dance..."
+          value={customSubject}
+          onChange={(e) => setCustomSubject(e.target.value)}
+        />
+        <p className="text-[11px] text-slate-500">
+          Specify any additional subjects or specializations not listed in the pills above.
+        </p>
+      </div>
+
+      {/* Navigation Buttons */}
       <div className="pt-4 flex items-center justify-between">
         <Button
           type="button"
@@ -86,6 +147,7 @@ export function CategoriesStep({
         </Button>
         <Button
           type="button"
+          disabled={!selectedCategoryId}
           onClick={onNext}
           className="gap-2"
         >

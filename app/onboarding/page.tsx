@@ -27,7 +27,9 @@ export default function OnboardingPage() {
   const [whatsapp, setWhatsapp] = useState("");
 
   const [categories, setCategories] = useState<ParentCategory[]>([]);
-  const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
+  const [selectedSubjectIds, setSelectedSubjectIds] = useState<string[]>([]);
+  const [customSubject, setCustomSubject] = useState<string>("");
 
   const [addressLine1, setAddressLine1] = useState("");
   const [city, setCity] = useState("");
@@ -121,10 +123,15 @@ export default function OnboardingPage() {
     }
   };
 
-  const toggleCategory = (id: string) => {
-    setSelectedCategoryIds((prev) =>
+  const toggleSubject = (id: string) => {
+    setSelectedSubjectIds((prev) =>
       prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
     );
+  };
+
+  const handleCategoryChange = (catId: string) => {
+    setSelectedCategoryId(catId);
+    setSelectedSubjectIds([]);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -143,14 +150,25 @@ export default function OnboardingPage() {
         finalCoverUrl = await uploadImage(coverFile, "covers");
       }
 
+      const allCategoryIds = selectedCategoryId
+        ? [selectedCategoryId, ...selectedSubjectIds]
+        : selectedSubjectIds;
+
+      let finalTagline = tagline;
+      if (customSubject.trim()) {
+        finalTagline = finalTagline
+          ? `${finalTagline} • ${customSubject.trim()}`
+          : customSubject.trim();
+      }
+
       const payload = {
         name,
-        tagline,
+        tagline: finalTagline,
         type,
         slug,
         phone,
         whatsapp,
-        categoryIds: selectedCategoryIds,
+        categoryIds: allCategoryIds,
         addressLine1,
         city,
         state,
@@ -236,8 +254,12 @@ export default function OnboardingPage() {
           {step === 2 && (
             <CategoriesStep
               categories={categories}
-              selectedCategoryIds={selectedCategoryIds}
-              toggleCategory={toggleCategory}
+              selectedCategoryId={selectedCategoryId}
+              setSelectedCategoryId={handleCategoryChange}
+              selectedSubjectIds={selectedSubjectIds}
+              toggleSubject={toggleSubject}
+              customSubject={customSubject}
+              setCustomSubject={setCustomSubject}
               onNext={() => setStep(3)}
               onBack={() => setStep(1)}
             />
