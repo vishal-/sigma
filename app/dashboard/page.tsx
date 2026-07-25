@@ -29,7 +29,7 @@ export default async function DashboardOverview() {
       organization: {
         include: {
           locations: true,
-          media: true,
+          images: true,
           category: true,
         },
       },
@@ -40,7 +40,7 @@ export default async function DashboardOverview() {
 
   const org = membership.organization;
   const location = org.locations[0];
-  const galleryCount = org.media.filter((m) => m.type === "GALLERY").length;
+  const galleryCount = org.images.filter((m) => m.type === "GALLERY").length;
 
   const publicUrl = `http://localhost:3000/${org.slug}`;
 

@@ -92,26 +92,18 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      // 5. Media attachments
+      // 5. Link uploaded images to the organization
       if (logoUrl) {
-        await tx.organizationMedia.create({
-          data: {
-            organizationId: org.id,
-            type: "LOGO",
-            url: logoUrl,
-            sortOrder: 0,
-          },
+        await tx.image.updateMany({
+          where: { userId, originalUrl: logoUrl, organizationId: null },
+          data: { organizationId: org.id },
         });
       }
 
       if (coverUrl) {
-        await tx.organizationMedia.create({
-          data: {
-            organizationId: org.id,
-            type: "COVER",
-            url: coverUrl,
-            sortOrder: 0,
-          },
+        await tx.image.updateMany({
+          where: { userId, originalUrl: coverUrl, organizationId: null },
+          data: { organizationId: org.id },
         });
       }
 

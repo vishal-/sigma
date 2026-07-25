@@ -93,10 +93,10 @@ export default function OnboardingPage() {
   }, [slug]);
 
   // Upload image handler
-  const uploadImage = async (file: File, folder: "logos" | "covers"): Promise<string> => {
+  const uploadImage = async (file: File, type: "LOGO" | "COVER"): Promise<string> => {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("folder", folder);
+    formData.append("type", type);
 
     const res = await fetch("/api/upload", {
       method: "POST",
@@ -104,7 +104,7 @@ export default function OnboardingPage() {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || "Upload failed");
-    return data.url;
+    return data.image.originalUrl;
   };
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -144,10 +144,10 @@ export default function OnboardingPage() {
       let finalCoverUrl = coverUrl;
 
       if (logoFile) {
-        finalLogoUrl = await uploadImage(logoFile, "logos");
+        finalLogoUrl = await uploadImage(logoFile, "LOGO");
       }
       if (coverFile) {
-        finalCoverUrl = await uploadImage(coverFile, "covers");
+        finalCoverUrl = await uploadImage(coverFile, "COVER");
       }
 
       const allCategoryIds = selectedCategoryId

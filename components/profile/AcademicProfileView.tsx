@@ -49,10 +49,10 @@ export default function AcademicProfileView({
   const [leadSuccess, setLeadSuccess] = useState(false);
 
   const location = organization.locations[0];
-  const logoMedia = organization.media.find((m) => m.type === "LOGO");
-  const coverMedia = organization.media.find((m) => m.type === "COVER");
+  const logoMedia = organization.images.find((m) => m.type === "LOGO");
+  const coverMedia = organization.images.find((m) => m.type === "COVER");
 
-  const heroImage = coverMedia?.url || "/images/academic_hero_student.png";
+  const heroImage = coverMedia?.originalUrl || "/images/academic_hero_student.png";
 
   const handleLeadSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,7 +102,7 @@ export default function AcademicProfileView({
         <div className="flex items-center gap-3">
           {logoMedia ? (
             <img
-              src={logoMedia.url}
+              src={logoMedia.originalUrl}
               alt={organization.name}
               className="w-10 h-10 rounded-xl object-cover border border-slate-200"
             />

@@ -73,38 +73,30 @@ export async function PUT(req: NextRequest) {
         });
       }
 
-      // 3. Update Media (Logo)
+      // 3. Link uploaded logo image to the organization
       if (logoUrl) {
-        const existingLogo = await tx.organizationMedia.findFirst({
+        await tx.image.updateMany({
           where: { organizationId: orgId, type: "LOGO" },
+          data: { originalUrl: logoUrl },
         });
-        if (existingLogo) {
-          await tx.organizationMedia.update({
-            where: { id: existingLogo.id },
-            data: { url: logoUrl },
-          });
-        } else {
-          await tx.organizationMedia.create({
-            data: { organizationId: orgId, type: "LOGO", url: logoUrl },
-          });
-        }
+        // If no existing logo is linked yet, link the freshly uploaded one by URL
+        await tx.image.updateMany({
+          where: { originalUrl: logoUrl, organizationId: null },
+          data: { organizationId: orgId },
+        });
       }
 
-      // 4. Update Media (Cover)
+      // 4. Link uploaded cover image to the organization
       if (coverUrl) {
-        const existingCover = await tx.organizationMedia.findFirst({
+        await tx.image.updateMany({
           where: { organizationId: orgId, type: "COVER" },
+          data: { originalUrl: coverUrl },
         });
-        if (existingCover) {
-          await tx.organizationMedia.update({
-            where: { id: existingCover.id },
-            data: { url: coverUrl },
-          });
-        } else {
-          await tx.organizationMedia.create({
-            data: { organizationId: orgId, type: "COVER", url: coverUrl },
-          });
-        }
+        // If no existing cover is linked yet, link the freshly uploaded one by URL
+        await tx.image.updateMany({
+          where: { originalUrl: coverUrl, organizationId: null },
+          data: { organizationId: orgId },
+        });
       }
     });
 

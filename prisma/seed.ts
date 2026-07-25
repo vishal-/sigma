@@ -100,12 +100,6 @@ async function main() {
         { name: "Pilates", slug: "pilates" },
       ],
     },
-    {
-      name: "Others",
-      slug: "others",
-      icon: "Grid",
-      children: [],
-    },
   ];
 
   for (const cat of categoryTree) {

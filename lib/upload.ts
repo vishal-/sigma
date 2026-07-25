@@ -1,36 +1,60 @@
-import fs from "fs/promises";
-import path from "path";
+export interface CloudUploadResult {
+  original: string;
+  medium: string;
+  thumbnail: string;
+}
 
 /**
- * Upload helper for saving image files locally or to Cloudflare R2 / S3.
- * Defaults to storing in public/uploads for local development.
+ * Encodes a UUID string into a compact base64url string (22 chars).
+ * Strips hyphens → 16 raw bytes → base64url. No external deps needed.
  */
-export async function saveUploadedFile(
+function uuidToBase64url(uuid: string): string {
+  return Buffer.from(uuid.replace(/-/g, ""), "hex").toString("base64url");
+}
+
+/**
+ * Uploads an image file to cloud storage via the qupload API.
+ * Returns the three URL variants produced by the service.
+ */
+export async function uploadImageToCloud(
   file: File,
-  folder: "logos" | "covers" | "gallery" = "gallery"
-): Promise<{ url: string }> {
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
+  userId: string
+): Promise<CloudUploadResult> {
+  const apiUrl = process.env.IMAGE_UPLOAD_API;
+  const accessKey = process.env.R2_ACCESS_KEY_ID;
+  const secretKey = process.env.R2_SECRET_ACCESS_KEY;
+  const bucket = process.env.R2_BUCKET;
+  const endpoint = process.env.R2_ENDPOINT;
+  const publicUrl = process.env.R2_PUBLIC_BASE_URL;
 
-  // Check if Cloudflare R2 environment variables are provided
-  const r2Account = process.env.R2_ACCOUNT_ID;
-  const r2Bucket = process.env.R2_BUCKET_NAME;
-
-  if (r2Account && r2Bucket) {
-    // If Cloudflare R2 credentials are dynamic in production, integrate R2 upload logic here.
-    // For now fallback cleanly to local storage if R2 is not fully configured.
+  if (!apiUrl || !accessKey || !secretKey || !bucket || !endpoint || !publicUrl) {
+    throw new Error("Missing required image upload environment variables.");
   }
 
-  // Local fallback storage in public/uploads/[folder]
-  const uploadDir = path.join(process.cwd(), "public", "uploads", folder);
-  await fs.mkdir(uploadDir, { recursive: true });
+  const set = uuidToBase64url(userId);
 
-  const ext = path.extname(file.name) || ".jpg";
-  const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}${ext}`;
-  const filePath = path.join(uploadDir, uniqueName);
+  const form = new FormData();
+  form.append("file", file);
+  form.append("accessKey", accessKey);
+  form.append("secretKey", secretKey);
+  form.append("bucket", bucket);
+  form.append("endpoint", endpoint);
+  form.append("publicUrl", publicUrl);
+  form.append("region", "auto");
+  form.append("set", set);
 
-  await fs.writeFile(filePath, buffer);
+  const res = await fetch(apiUrl, { method: "POST", body: form });
 
-  const publicUrl = `/uploads/${folder}/${uniqueName}`;
-  return { url: publicUrl };
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Upload API error (${res.status}): ${text}`);
+  }
+
+  const data = (await res.json()) as CloudUploadResult;
+
+  if (!data.original || !data.medium || !data.thumbnail) {
+    throw new Error("Upload API returned an unexpected response shape.");
+  }
+
+  return data;
 }

@@ -34,7 +34,7 @@ export default async function DashboardLayout({
     include: {
       organization: {
         include: {
-          media: true,
+          images: true,
         },
       },
     },
@@ -130,7 +130,7 @@ export default async function DashboardLayout({
   }
 
   const org = membership.organization;
-  const logoMedia = org.media.find((m) => m.type === "LOGO");
+  const logoMedia = org.images.find((m) => m.type === "LOGO");
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row">
@@ -152,8 +152,8 @@ export default async function DashboardLayout({
           {/* Organization Pill */}
           <div className="p-4 mx-3 my-4 rounded-2xl bg-slate-950 border border-slate-800 flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-indigo-950 border border-indigo-800 flex items-center justify-center overflow-hidden shrink-0">
-              {logoMedia?.url ? (
-                <img src={logoMedia.url} alt={org.name} className="w-full h-full object-cover" />
+              {logoMedia?.originalUrl ? (
+                <img src={logoMedia.originalUrl} alt={org.name} className="w-full h-full object-cover" />
               ) : (
                 <HiBuildingOffice2 className="w-5 h-5 text-indigo-400" />
               )}

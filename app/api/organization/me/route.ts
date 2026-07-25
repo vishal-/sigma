@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
         organization: {
           include: {
             locations: true,
-            media: true,
+            images: true,
             category: {
               include: { children: true },
             },

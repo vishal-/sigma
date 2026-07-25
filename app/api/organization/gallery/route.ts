@@ -12,9 +12,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { url, altText } = await req.json();
-    if (!url) {
-      return NextResponse.json({ error: "Image URL is required" }, { status: 400 });
+    const { imageId, altText } = await req.json();
+    if (!imageId) {
+      return NextResponse.json({ error: "imageId is required" }, { status: 400 });
     }
 
     const membership = await prisma.membership.findFirst({
@@ -25,16 +25,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Organization not found" }, { status: 404 });
     }
 
-    const media = await prisma.organizationMedia.create({
+    // The image was already created by /api/upload — just link it to the org
+    const image = await prisma.image.update({
+      where: { id: imageId, userId: session.user.id },
       data: {
         organizationId: membership.organizationId,
-        type: "GALLERY",
-        url,
-        altText: altText || "Academy photo",
+        altText: altText || null,
       },
     });
 
-    return NextResponse.json({ success: true, media });
+    return NextResponse.json({ success: true, image });
   } catch (error) {
     console.error("Gallery upload error:", error);
     return NextResponse.json({ error: "Failed to add gallery image" }, { status: 500 });
@@ -66,7 +66,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "Organization not found" }, { status: 404 });
     }
 
-    await prisma.organizationMedia.deleteMany({
+    await prisma.image.deleteMany({
       where: {
         id: mediaId,
         organizationId: membership.organizationId,

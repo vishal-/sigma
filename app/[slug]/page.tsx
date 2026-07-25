@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
     where: { slug: slug.toLowerCase() },
     include: {
       locations: true,
-      media: true,
+      images: true,
       category: {
         include: { children: true },
       },
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
 
   const primaryCategory = org.category?.name || "Coaching & Tutoring";
   const city = org.locations[0]?.city || "India";
-  const coverImage = org.media.find((m) => m.type === "COVER" || m.type === "LOGO")?.url;
+  const coverImage = org.images.find((m) => m.type === "COVER" || m.type === "LOGO")?.originalUrl;
 
   const title = `${org.name} - ${primaryCategory} in ${city} | Tutorog`;
   const description = org.tagline || org.description || `Connect with ${org.name} for top-quality ${primaryCategory} in ${city}.`;
@@ -65,7 +65,7 @@ export default async function SlugPublicPage({ params }: SlugPageProps) {
     where: { slug: slug.toLowerCase() },
     include: {
       locations: true,
-      media: true,
+      images: true,
       category: {
         include: { children: true },
       },
@@ -77,7 +77,7 @@ export default async function SlugPublicPage({ params }: SlugPageProps) {
   }
 
   const location = org.locations[0];
-  const logoMedia = org.media.find((m) => m.type === "LOGO");
+  const logoMedia = org.images.find((m) => m.type === "LOGO");
 
   // Schema.org EducationalOrganization structured data for SEO indexing
   const jsonLd = {
@@ -87,7 +87,7 @@ export default async function SlugPublicPage({ params }: SlugPageProps) {
     description: org.tagline || org.description,
     url: `https://tutorog.com/${org.slug}`,
     telephone: org.phone || undefined,
-    image: logoMedia?.url || undefined,
+    image: logoMedia?.originalUrl || undefined,
     address: location
       ? {
         "@type": "PostalAddress",

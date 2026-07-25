@@ -52,9 +52,9 @@ export default function PublicProfileView({ organization: org }: PublicProfilePr
   const [submittingLead, setSubmittingLead] = useState(false);
   const [leadSuccess, setLeadSuccess] = useState(false);
 
-  const logoMedia = org.media.find((m) => m.type === "LOGO");
-  const coverMedia = org.media.find((m) => m.type === "COVER");
-  const galleryMedia = org.media.filter((m) => m.type === "GALLERY");
+  const logoMedia = org.images.find((m) => m.type === "LOGO");
+  const coverMedia = org.images.find((m) => m.type === "COVER");
+  const galleryMedia = org.images.filter((m) => m.type === "GALLERY");
 
   const location = org.locations[0];
   const publicUrl = typeof window !== "undefined" ? window.location.href : `https://tutorog.com/${org.slug}`;
@@ -112,8 +112,8 @@ export default function PublicProfileView({ organization: org }: PublicProfilePr
     <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-indigo-500 selection:text-white pb-16">
       {/* Top Banner & Header */}
       <div className="relative w-full h-64 md:h-80 bg-slate-900 overflow-hidden">
-        {coverMedia?.url ? (
-          <img src={coverMedia.url} alt={org.name} className="w-full h-full object-cover" />
+        {coverMedia?.originalUrl ? (
+          <img src={coverMedia.originalUrl} alt={org.name} className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full bg-gradient-to-r from-indigo-950 via-slate-900 to-purple-950 flex items-center justify-center">
             <HiBuildingOffice2 className="w-16 h-16 text-slate-800" />
@@ -130,8 +130,8 @@ export default function PublicProfileView({ organization: org }: PublicProfilePr
             <div className="flex flex-col sm:flex-row items-start sm:items-end gap-5">
               {/* Logo Avatar */}
               <div className="w-28 h-28 rounded-3xl bg-slate-950 border-4 border-slate-900 overflow-hidden shadow-2xl shrink-0 flex items-center justify-center -mt-14">
-                {logoMedia?.url ? (
-                  <img src={logoMedia.url} alt={org.name} className="w-full h-full object-cover" />
+                {logoMedia?.originalUrl ? (
+                  <img src={logoMedia.originalUrl} alt={org.name} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-indigo-600 to-violet-600 flex items-center justify-center font-black text-3xl text-white">
                     {org.name[0]}
@@ -266,11 +266,11 @@ export default function PublicProfileView({ organization: org }: PublicProfilePr
               {galleryMedia.map((item) => (
                 <div
                   key={item.id}
-                  onClick={() => setActiveImage(item.url)}
+                  onClick={() => setActiveImage(item.originalUrl)}
                   className="cursor-pointer aspect-square rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden group relative"
                 >
                   <img
-                    src={item.url}
+                    src={item.originalUrl}
                     alt={item.altText || org.name}
                     className="w-full h-full object-cover transition group-hover:scale-105"
                   />

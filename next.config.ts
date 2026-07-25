@@ -12,6 +12,8 @@ const nextConfig: NextConfig = {
       // Microsoft / Entra profile pictures
       { protocol: "https", hostname: "*.microsoft.com" },
       { protocol: "https", hostname: "*.microsoftonline.com" },
+      // Cloudflare R2 CDN (uploaded images)
+      { protocol: "https", hostname: "i.puja.best" },
     ],
   },
 };

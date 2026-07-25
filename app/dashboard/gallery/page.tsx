@@ -19,8 +19,8 @@ export default function GalleryPage() {
     fetch("/api/organization/me")
       .then((res) => res.json())
       .then((data) => {
-        if (data.organization?.media) {
-          const galleryItems = data.organization.media.filter(
+        if (data.organization?.images) {
+          const galleryItems = data.organization.images.filter(
             (m: any) => m.type === "GALLERY"
           );
           setGallery(galleryItems);
@@ -46,7 +46,7 @@ export default function GalleryPage() {
         const file = files[i];
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("folder", "gallery");
+        formData.append("type", "GALLERY");
 
         const uploadRes = await fetch("/api/upload", {
           method: "POST",
@@ -58,7 +58,10 @@ export default function GalleryPage() {
         await fetch("/api/organization/gallery", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url: uploadData.url, altText: file.name }),
+          body: JSON.stringify({
+            imageId: uploadData.image.id,
+            altText: file.name,
+          }),
         });
       }
 
@@ -153,7 +156,7 @@ export default function GalleryPage() {
               className="group relative aspect-square rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden"
             >
               <img
-                src={item.url}
+                src={item.originalUrl}
                 alt={item.altText || "Academy photo"}
                 className="w-full h-full object-cover transition group-hover:scale-105"
               />
