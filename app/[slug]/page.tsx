@@ -1,7 +1,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import PublicProfileView from "@/components/PublicProfileView";
+import PublicProfileView from "@/components/profile/PublicProfileView";
 import { Metadata } from "next";
 
 interface SlugPageProps {
@@ -90,12 +90,12 @@ export default async function SlugPublicPage({ params }: SlugPageProps) {
     image: logoMedia?.url || undefined,
     address: location
       ? {
-          "@type": "PostalAddress",
-          streetAddress: location.addressLine1,
-          addressLocality: location.city,
-          addressRegion: location.state,
-          addressCountry: location.country || "India",
-        }
+        "@type": "PostalAddress",
+        streetAddress: location.addressLine1,
+        addressLocality: location.city,
+        addressRegion: location.state,
+        addressCountry: location.country || "India",
+      }
       : undefined,
   };
 

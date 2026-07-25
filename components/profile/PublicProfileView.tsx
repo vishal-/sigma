@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import AcademicProfileView from "@/components/AcademicProfileView";
+import AcademicProfileView from "@/components/profile/AcademicProfileView";
 import { OrganizationProps } from "@/types/organization";
 
 interface PublicProfileProps {
@@ -65,7 +65,7 @@ export default function PublicProfileView({ organization: org }: PublicProfilePr
         title: org.name,
         text: `Check out ${org.name} on Tutorog!`,
         url: publicUrl,
-      }).catch(() => {});
+      }).catch(() => { });
     } else {
       navigator.clipboard.writeText(publicUrl);
       setCopied(true);
