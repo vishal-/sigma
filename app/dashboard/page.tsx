@@ -12,6 +12,7 @@ import {
   HiBuildingOffice2,
 } from "react-icons/hi2";
 import ShareWidget from "@/components/ShareWidget";
+import DeleteOrganizationButton from "@/components/DeleteOrganizationButton";
 
 export default async function DashboardOverview() {
   const session = await auth.api.getSession({
@@ -59,7 +60,7 @@ export default async function DashboardOverview() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
             <Link
               href={`/${org.slug}`}
               target="_blank"
@@ -76,6 +77,8 @@ export default async function DashboardOverview() {
               <HiPencilSquare className="w-4 h-4 text-indigo-400" />
               <span>Edit Profile</span>
             </Link>
+
+            <DeleteOrganizationButton orgName={org.name} />
           </div>
         </div>
       </div>

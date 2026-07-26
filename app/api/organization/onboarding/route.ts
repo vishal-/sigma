@@ -53,6 +53,18 @@ export async function POST(req: NextRequest) {
 
     const userId = session.user.id;
 
+    // Ensure user can only have one organization at a time
+    const existingMembership = await prisma.membership.findFirst({
+      where: { userId },
+    });
+
+    if (existingMembership) {
+      return NextResponse.json(
+        { error: "You already have an active organization. Only one organization per user is allowed." },
+        { status: 400 }
+      );
+    }
+
     const organization = await prisma.$transaction(async (tx) => {
       // 1. Create Organization
       const org = await tx.organization.create({
