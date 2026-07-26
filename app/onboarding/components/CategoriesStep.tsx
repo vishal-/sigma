@@ -59,16 +59,16 @@ export function CategoriesStep({
 
       {/* 1. Category Dropdown */}
       <div className="space-y-2">
-        <Label>
+        <Label className="text-sm font-semibold text-slate-200">
           Primary Category <span className="text-rose-400">*</span>
         </Label>
         <Select value={selectedCategoryId} onValueChange={setSelectedCategoryId}>
-          <SelectTrigger className="h-12 bg-slate-950">
-            <SelectValue placeholder="Select a primary category (e.g. Academics, Sports)..." />
+          <SelectTrigger className="h-12 bg-slate-950 border-slate-800 text-white font-medium focus:ring-2 focus:ring-indigo-500">
+            <SelectValue placeholder="Select a primary category (e.g. Academics, Sports, Music)..." />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-slate-900 border-slate-800 text-white">
             {categories.map((parent) => (
-              <SelectItem key={parent.id} value={parent.id}>
+              <SelectItem key={parent.id} value={parent.id} className="cursor-pointer hover:bg-indigo-600/20">
                 {parent.name}
               </SelectItem>
             ))}
@@ -77,38 +77,50 @@ export function CategoriesStep({
       </div>
 
       {/* 2. Subject Pills for Selected Category */}
-      {activeCategory && activeCategory.subjects.length > 0 && (
-        <div className="space-y-3 bg-slate-950/60 p-5 rounded-2xl border border-slate-800 animate-fadeIn">
+      {activeCategory ? (
+        <div className="space-y-3 bg-slate-950/70 p-6 rounded-2xl border border-indigo-500/20 animate-fadeIn shadow-xl">
           <div className="flex items-center justify-between">
-            <Label className="text-xs uppercase tracking-wider text-indigo-300 font-bold flex items-center gap-1.5">
+            <Label className="text-xs uppercase tracking-wider text-indigo-300 font-extrabold flex items-center gap-2">
               <HiSparkles className="w-4 h-4 text-indigo-400" />
               Subjects in {activeCategory.name}
             </Label>
-            <span className="text-[11px] text-slate-500 font-medium">
+            <span className="text-[11px] text-slate-400 font-semibold bg-indigo-950/60 px-2.5 py-1 rounded-full border border-indigo-800/40">
               Select all that apply
             </span>
           </div>
 
-          <div className="flex flex-wrap gap-2.5 pt-1 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
-            {activeCategory.subjects.map((child) => {
-              const isSelected = selectedSubjectIds.includes(child.id);
-              return (
-                <button
-                  key={child.id}
-                  type="button"
-                  onClick={() => toggleSubject(child.id)}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 border flex items-center gap-1.5 cursor-pointer ${
-                    isSelected
-                      ? "bg-primary text-primary-foreground border-primary shadow-md shadow-indigo-600/30 scale-105"
-                      : "bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white"
-                  }`}
-                >
-                  {isSelected && <HiCheck className="w-3.5 h-3.5 stroke-[3]" />}
-                  {child.name}
-                </button>
-              );
-            })}
-          </div>
+          {activeCategory.subjects.length > 0 ? (
+            <div className="flex flex-wrap gap-2.5 pt-2 max-h-56 overflow-y-auto pr-1 custom-scrollbar">
+              {activeCategory.subjects.map((child) => {
+                const isSelected = selectedSubjectIds.includes(child.id);
+                return (
+                  <button
+                    key={child.id}
+                    type="button"
+                    onClick={() => toggleSubject(child.id)}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 border flex items-center gap-2 cursor-pointer ${
+                      isSelected
+                        ? "bg-indigo-600 text-white border-indigo-500 shadow-md shadow-indigo-600/30 scale-[1.03]"
+                        : "bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white"
+                    }`}
+                  >
+                    {isSelected && <HiCheck className="w-4 h-4 stroke-[3]" />}
+                    <span>{child.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="text-xs text-slate-400 italic pt-1">
+              No subjects listed for this category yet. You can continue to the next step.
+            </p>
+          )}
+        </div>
+      ) : (
+        <div className="p-6 rounded-2xl border border-dashed border-slate-800 bg-slate-950/40 text-center space-y-1">
+          <p className="text-xs font-medium text-slate-400">
+            Please select a primary category above to choose your subjects & specialties.
+          </p>
         </div>
       )}
 
