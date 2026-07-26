@@ -22,6 +22,8 @@ import { Button } from "@/components/ui/button";
 import AcademicProfileView from "@/components/profile/AcademicProfileView";
 import DanceProfileView from "@/components/profile/DanceProfileView";
 import SportsProfileView from "@/components/profile/SportsProfileView";
+import MusicProfileView from "@/components/profile/MusicProfileView";
+import ArtsProfileView from "@/components/profile/ArtsProfileView";
 import { OrganizationProps } from "@/types/organization";
 
 interface PublicProfileProps {
@@ -41,6 +43,28 @@ export default function PublicProfileView({ organization: org }: PublicProfilePr
   const [leadSuccess, setLeadSuccess] = useState(false);
 
   const categoryEnum = (org.category || "").toUpperCase();
+
+  const isArts =
+    org.type === "ARTS" ||
+    categoryEnum === "ARTS" ||
+    org.name.toLowerCase().includes("art") ||
+    org.name.toLowerCase().includes("paint") ||
+    org.name.toLowerCase().includes("craft");
+
+  if (isArts) {
+    return <ArtsProfileView organization={org} />;
+  }
+
+  const isMusic =
+    org.type === "MUSIC" ||
+    categoryEnum === "MUSIC" ||
+    org.name.toLowerCase().includes("music") ||
+    org.name.toLowerCase().includes("vocal") ||
+    org.name.toLowerCase().includes("harmony");
+
+  if (isMusic) {
+    return <MusicProfileView organization={org} />;
+  }
 
   const isSports =
     org.type === "SPORTS" ||
