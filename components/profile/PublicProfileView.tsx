@@ -24,6 +24,8 @@ import DanceProfileView from "@/components/profile/DanceProfileView";
 import SportsProfileView from "@/components/profile/SportsProfileView";
 import MusicProfileView from "@/components/profile/MusicProfileView";
 import ArtsProfileView from "@/components/profile/ArtsProfileView";
+import CodingProfileView from "@/components/profile/CodingProfileView";
+import FitnessProfileView from "@/components/profile/FitnessProfileView";
 import { OrganizationProps } from "@/types/organization";
 
 interface PublicProfileProps {
@@ -43,6 +45,28 @@ export default function PublicProfileView({ organization: org }: PublicProfilePr
   const [leadSuccess, setLeadSuccess] = useState(false);
 
   const categoryEnum = (org.category || "").toUpperCase();
+
+  const isFitness =
+    org.type === "FITNESS" ||
+    categoryEnum === "FITNESS" ||
+    org.name.toLowerCase().includes("fit") ||
+    org.name.toLowerCase().includes("gym") ||
+    org.name.toLowerCase().includes("workout");
+
+  if (isFitness) {
+    return <FitnessProfileView organization={org} />;
+  }
+
+  const isCoding =
+    org.type === "CODING" ||
+    categoryEnum === "CODING" ||
+    org.name.toLowerCase().includes("code") ||
+    org.name.toLowerCase().includes("tech") ||
+    org.name.toLowerCase().includes("dev");
+
+  if (isCoding) {
+    return <CodingProfileView organization={org} />;
+  }
 
   const isArts =
     org.type === "ARTS" ||
