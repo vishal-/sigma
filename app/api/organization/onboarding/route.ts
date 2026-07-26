@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { isSlugAvailable, isValidSlug } from "@/lib/slug";
-import { OrganizationType } from "@prisma/client";
+import { OrganizationType, Category } from "@prisma/client";
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,8 +20,8 @@ export async function POST(req: NextRequest) {
       tagline,
       type,
       slug,
-      categoryId,
-      categoryIds,
+      category,
+      subjectIds,
       addressLine1,
       city,
       state,
@@ -30,8 +30,6 @@ export async function POST(req: NextRequest) {
       logoUrl,
       coverUrl,
     } = body;
-
-    const targetCategoryId = categoryId || (Array.isArray(categoryIds) && categoryIds[0]) || null;
 
     if (!name || !slug || !city || !addressLine1) {
       return NextResponse.json(
@@ -67,7 +65,11 @@ export async function POST(req: NextRequest) {
           phone,
           whatsapp,
           email: session.user.email,
-          categoryId: targetCategoryId,
+          category: (category as Category) || Category.ACADEMICS,
+          subjects:
+            Array.isArray(subjectIds) && subjectIds.length > 0
+              ? { connect: subjectIds.map((id: string) => ({ id })) }
+              : undefined,
         },
       });
 

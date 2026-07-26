@@ -21,17 +21,11 @@ export interface ImageItem {
   createdAt?: Date | string;
 }
 
-export interface OrganizationCategoryItem {
+export interface SubjectItem {
   id: string;
   name: string;
   slug: string;
-  icon?: string | null;
-  parentId?: string | null;
-  children?: Array<{
-    id: string;
-    name: string;
-    slug: string;
-  }>;
+  category: string;
 }
 
 export interface OrganizationProps {
@@ -53,12 +47,6 @@ export interface OrganizationProps {
   updatedAt?: Date | string;
   locations: OrganizationLocationItem[];
   images: ImageItem[];
-  category?: OrganizationCategoryItem | null;
-  categories?: Array<{
-    category: {
-      id: string;
-      name: string;
-      slug: string;
-    };
-  }>;
+  category: string;
+  subjects: SubjectItem[];
 }

@@ -148,10 +148,6 @@ export default function OnboardingPage() {
         finalCoverUrl = await uploadImage(coverFile, "COVER");
       }
 
-      const allCategoryIds = selectedCategoryId
-        ? [selectedCategoryId, ...selectedSubjectIds]
-        : selectedSubjectIds;
-
       const payload = {
         name,
         tagline,
@@ -159,8 +155,8 @@ export default function OnboardingPage() {
         slug,
         phone,
         whatsapp,
-        categoryId: selectedCategoryId,
-        categoryIds: allCategoryIds,
+        category: selectedCategoryId,
+        subjectIds: selectedSubjectIds,
         addressLine1,
         city,
         state,

@@ -1,13 +1,12 @@
+import { Category } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 
 async function main() {
-  console.log("Seeding categories...");
+  console.log("Seeding subjects...");
 
-  const categoryTree = [
+  const subjectData: { category: Category; children: { name: string; slug: string }[] }[] = [
     {
-      name: "Academics",
-      slug: "academics",
-      icon: "BookOpen",
+      category: Category.ACADEMICS,
       children: [
         { name: "Mathematics", slug: "mathematics" },
         { name: "Physics", slug: "physics" },
@@ -45,9 +44,7 @@ async function main() {
     },
 
     {
-      name: "Sports",
-      slug: "sports",
-      icon: "Trophy",
+      category: Category.SPORTS,
       children: [
         { name: "Cricket", slug: "cricket" },
         { name: "Football", slug: "football" },
@@ -76,9 +73,7 @@ async function main() {
     },
 
     {
-      name: "Dance",
-      slug: "dance",
-      icon: "Sparkles",
+      category: Category.DANCE,
       children: [
         { name: "Bharatanatyam", slug: "bharatanatyam" },
         { name: "Kathak", slug: "kathak" },
@@ -107,9 +102,7 @@ async function main() {
     },
 
     {
-      name: "Music",
-      slug: "music",
-      icon: "Music",
+      category: Category.MUSIC,
       children: [
         { name: "Vocal Music", slug: "vocal" },
         { name: "Hindustani Classical Vocal", slug: "hindustani-vocal" },
@@ -140,9 +133,7 @@ async function main() {
     },
 
     {
-      name: "Arts & Crafts",
-      slug: "arts",
-      icon: "Palette",
+      category: Category.ARTS,
       children: [
         { name: "Drawing & Painting", slug: "drawing-painting" },
         { name: "Sketching", slug: "sketching" },
@@ -169,9 +160,7 @@ async function main() {
     },
 
     {
-      name: "Coding & Tech",
-      slug: "coding",
-      icon: "Code",
+      category: Category.CODING,
       children: [
         { name: "Computer Basics", slug: "computer-basics" },
         { name: "Programming Fundamentals", slug: "programming-fundamentals" },
@@ -210,9 +199,7 @@ async function main() {
     },
 
     {
-      name: "Fitness & Wellness",
-      slug: "fitness",
-      icon: "Heart",
+      category: Category.FITNESS,
       children: [
         { name: "Personal Training", slug: "personal-training" },
         { name: "Weight Training", slug: "weight-training" },
@@ -239,31 +226,21 @@ async function main() {
     },
   ];
 
-  for (const cat of categoryTree) {
-    const parent = await prisma.category.upsert({
-      where: { slug: cat.slug },
-      update: { name: cat.name, icon: cat.icon },
-      create: {
-        name: cat.name,
-        slug: cat.slug,
-        icon: cat.icon,
-      },
-    });
-
-    for (const child of cat.children) {
-      await prisma.category.upsert({
+  for (const group of subjectData) {
+    for (const child of group.children) {
+      await prisma.subject.upsert({
         where: { slug: child.slug },
-        update: { name: child.name, parentId: parent.id },
+        update: { name: child.name, category: group.category },
         create: {
           name: child.name,
           slug: child.slug,
-          parentId: parent.id,
+          category: group.category,
         },
       });
     }
   }
 
-  console.log("Categories seeded successfully!");
+  console.log("Subjects seeded successfully!");
 }
 
 main()

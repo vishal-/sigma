@@ -27,7 +27,7 @@ export default async function DashboardOverview() {
         include: {
           locations: true,
           images: true,
-          category: true,
+          subjects: true,
         },
       },
     },
@@ -54,32 +54,27 @@ export default async function DashboardOverview() {
             <h1 className="text-3xl font-extrabold text-white tracking-tight">
               Welcome back, {session.user.name || "Tutor"}!
             </h1>
-            <p className="text-slate-300 text-sm mt-1">
-              Your professional page for <span className="font-bold text-white">{org.name}</span> is live. Anyone can view your profile at:
+            <p className="text-slate-400 text-sm mt-1">
+              Managing <span className="text-indigo-300 font-semibold">{org.name}</span>
             </p>
-            <div className="mt-3 flex items-center gap-2">
-              <span className="font-mono text-indigo-300 bg-indigo-950/80 px-3 py-1.5 rounded-xl border border-indigo-800/80 text-sm font-semibold">
-                tutorog.com/{org.slug}
-              </span>
-              <a
-                href={`/${org.slug}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white transition shadow-lg shadow-indigo-600/30"
-                title="View live page"
-              >
-                <HiArrowTopRightOnSquare className="w-4 h-4" />
-              </a>
-            </div>
           </div>
 
-          <div className="shrink-0 flex flex-col gap-3">
+          <div className="flex items-center gap-3 shrink-0">
+            <Link
+              href={`/${org.slug}`}
+              target="_blank"
+              className="px-5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs flex items-center gap-2 transition shadow-lg shadow-indigo-600/30"
+            >
+              <span>View Live Page</span>
+              <HiArrowTopRightOnSquare className="w-4 h-4" />
+            </Link>
+
             <Link
               href="/dashboard/profile"
-              className="px-5 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm flex items-center gap-2 transition shadow-lg shadow-indigo-600/30"
+              className="px-4 py-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-semibold text-xs flex items-center gap-2 transition"
             >
-              <HiPencilSquare className="w-5 h-5" />
-              Edit Profile
+              <HiPencilSquare className="w-4 h-4 text-indigo-400" />
+              <span>Edit Profile</span>
             </Link>
           </div>
         </div>
@@ -95,9 +90,9 @@ export default async function DashboardOverview() {
             <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">Primary Category</span>
             <HiBuildingOffice2 className="w-6 h-6 text-indigo-400" />
           </div>
-          <p className="text-xl font-extrabold text-white truncate">{org.category?.name || "None"}</p>
+          <p className="text-xl font-extrabold text-white truncate">{org.category || "ACADEMICS"}</p>
           <p className="text-xs text-slate-400 mt-1">
-            {org.category?.name ? "Primary classification set" : "No category selected"}
+            {org.subjects?.length ? `${org.subjects.length} subjects listed` : "No subjects added"}
           </p>
         </div>
 

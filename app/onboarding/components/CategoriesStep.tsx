@@ -10,18 +10,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export interface CategoryChild {
+export interface SubjectOption {
   id: string;
   name: string;
   slug: string;
+  category: string;
 }
 
 export interface ParentCategory {
   id: string;
   name: string;
-  slug: string;
   icon?: string;
-  children: CategoryChild[];
+  subjects: SubjectOption[];
 }
 
 interface CategoriesStepProps {
@@ -77,7 +77,7 @@ export function CategoriesStep({
       </div>
 
       {/* 2. Subject Pills for Selected Category */}
-      {activeCategory && activeCategory.children.length > 0 && (
+      {activeCategory && activeCategory.subjects.length > 0 && (
         <div className="space-y-3 bg-slate-950/60 p-5 rounded-2xl border border-slate-800 animate-fadeIn">
           <div className="flex items-center justify-between">
             <Label className="text-xs uppercase tracking-wider text-indigo-300 font-bold flex items-center gap-1.5">
@@ -90,7 +90,7 @@ export function CategoriesStep({
           </div>
 
           <div className="flex flex-wrap gap-2.5 pt-1 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
-            {activeCategory.children.map((child) => {
+            {activeCategory.subjects.map((child) => {
               const isSelected = selectedSubjectIds.includes(child.id);
               return (
                 <button

@@ -83,13 +83,10 @@ export default function AcademicProfileView({
     }
   };
 
-  const subjectsList = organization.category?.children
-    ? organization.category.children.map((c) => c.name)
-    : organization.category
-    ? [organization.category.name]
-    : organization.categories
-    ? organization.categories.map((c) => c.category.name)
-    : [];
+  const subjectsList =
+    organization.subjects && organization.subjects.length > 0
+      ? organization.subjects.map((s) => s.name)
+      : ["Mathematics", "Physics", "Chemistry", "Biology"];
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-blue-600 selection:text-white">

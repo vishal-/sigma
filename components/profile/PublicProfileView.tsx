@@ -39,11 +39,11 @@ export default function PublicProfileView({ organization: org }: PublicProfilePr
   const [submittingLead, setSubmittingLead] = useState(false);
   const [leadSuccess, setLeadSuccess] = useState(false);
 
-  const primaryCategory = org.category?.name || org.categories?.[0]?.category.name || "";
+  const categoryEnum = (org.category || "").toUpperCase();
 
   const isDance =
     org.type === "DANCE" ||
-    primaryCategory.toLowerCase().includes("dance") ||
+    categoryEnum === "DANCE" ||
     org.name.toLowerCase().includes("dance") ||
     org.name.toLowerCase().includes("studio");
 
@@ -55,10 +55,9 @@ export default function PublicProfileView({ organization: org }: PublicProfilePr
     org.type === "ACADEMY" ||
     org.type === "COACHING" ||
     org.type === "INDIVIDUAL" ||
-    primaryCategory.toLowerCase().includes("academic") ||
-    primaryCategory.toLowerCase().includes("tuition") ||
-    primaryCategory.toLowerCase().includes("math") ||
-    primaryCategory.toLowerCase().includes("science");
+    categoryEnum === "ACADEMICS" ||
+    org.name.toLowerCase().includes("academic") ||
+    org.name.toLowerCase().includes("tuition");
 
   if (isAcademic) {
     return <AcademicProfileView organization={org} />;

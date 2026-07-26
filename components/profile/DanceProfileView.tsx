@@ -96,13 +96,10 @@ export default function DanceProfileView({
   };
 
   // Subjects or Dance Styles offered
-  const danceStyles = org.category?.children
-    ? org.category.children.map((c) => c.name)
-    : org.category
-    ? [org.category.name]
-    : org.categories
-    ? org.categories.map((c) => c.category.name)
-    : ["Classical Bharatanatyam", "Bollywood Fusion", "Hip Hop & Urban", "Contemporary & Jazz"];
+  const danceStyles =
+    org.subjects && org.subjects.length > 0
+      ? org.subjects.map((s) => s.name)
+      : ["Classical Bharatanatyam", "Bollywood Fusion", "Hip Hop & Urban", "Contemporary & Jazz"];
 
   // Default moments / gallery highlights if gallery is empty
   const defaultMoments = [
