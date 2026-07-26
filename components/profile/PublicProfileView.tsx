@@ -21,6 +21,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import AcademicProfileView from "@/components/profile/AcademicProfileView";
 import DanceProfileView from "@/components/profile/DanceProfileView";
+import SportsProfileView from "@/components/profile/SportsProfileView";
 import { OrganizationProps } from "@/types/organization";
 
 interface PublicProfileProps {
@@ -40,6 +41,16 @@ export default function PublicProfileView({ organization: org }: PublicProfilePr
   const [leadSuccess, setLeadSuccess] = useState(false);
 
   const categoryEnum = (org.category || "").toUpperCase();
+
+  const isSports =
+    org.type === "SPORTS" ||
+    categoryEnum === "SPORTS" ||
+    org.name.toLowerCase().includes("sport") ||
+    org.name.toLowerCase().includes("athletic");
+
+  if (isSports) {
+    return <SportsProfileView organization={org} />;
+  }
 
   const isDance =
     org.type === "DANCE" ||
@@ -170,18 +181,17 @@ export default function PublicProfileView({ organization: org }: PublicProfilePr
 
                   {org.category && (
                     <span
-                      key={org.category.id}
-                      className="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold"
+                      className="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold uppercase tracking-wider"
                     >
-                      {org.category.name}
+                      {org.category}
                     </span>
                   )}
-                  {org.categories?.map((c) => (
+                  {org.subjects?.map((s) => (
                     <span
-                      key={c.category.id}
-                      className="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold"
+                      key={s.id}
+                      className="px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-xs font-medium"
                     >
-                      {c.category.name}
+                      {s.name}
                     </span>
                   ))}
                 </div>
